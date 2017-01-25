@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class Movement : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Movement : MonoBehaviour
     Animator anim;
     Rigidbody rb;
 
+    InputDevice inputDevice;
+
 	void Start ()
     {
         anim = GetComponent<Animator>();
@@ -31,9 +34,11 @@ public class Movement : MonoBehaviour
 	
 	void Update ()
     {
-        hori = Input.GetAxis("Horizontal");
-        hori2 = Input.GetAxis("Horizontal2");
-        vert = Input.GetAxis("Vertical");
+        inputDevice = InputManager.ActiveDevice;
+
+        hori = inputDevice.LeftStickX;
+        hori2 = inputDevice.RightStickX;
+        vert = inputDevice.LeftStickY;
 
         if (hori != 0 || vert != 0)
             anim.SetBool("IsMoving", true);
@@ -49,7 +54,7 @@ public class Movement : MonoBehaviour
             anim.SetFloat("Horizontal2", hori2);
         }
 
-        if (Input.GetButtonDown("Fire1") && isGrounded)
+        if (inputDevice.Action1.WasPressed && isGrounded)
         {
             anim.SetBool("isJumping", true);
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);

@@ -5,12 +5,13 @@ using InControl;
 public class CustomCamera : MonoBehaviour
 {
     public GameObject player;
-    public float cameraSpeed = 100;
+    public float aimSpeed = 10;
     public float rotationSpeed = 100;
     [Tooltip("Position of the camera when not in aim mode.")]
     public Vector3 startPosition;
     [Tooltip("Position of the camera when you are in aim mode.")]
     public Vector3 aimPosition;
+    Animator anim;
 
     float hori2;
     Vector3 myPosition;
@@ -27,27 +28,25 @@ public class CustomCamera : MonoBehaviour
 	void Start ()
     {
         player = GameObject.Find("Player");
+        anim = player.GetComponent<Animator>();
 	}
 	void Update ()
     {
         inputDevice = InputManager.ActiveDevice;
         hori2 = inputDevice.RightStickX;
-
-       
-     
-
+        
         switch (cameraView)
         {
             case CameraView.ThirdPerson:
                 if (inputDevice.LeftTrigger.IsPressed)
                 {
-                    myPosition = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x + aimPosition.x, player.transform.position.y + aimPosition.y, player.transform.position.z + aimPosition.z), Time.deltaTime * 10);
-                    transform.RotateAround(myPosition, new Vector3(0, transform.position.y, 0), hori2 * Time.deltaTime);
+                    anim.SetBool("IsAiming", true);
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, aimPosition, aimSpeed * Time.deltaTime);
                 }
                 else
                 {
-                    myPosition = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, player.transform.position.y + startPosition.y, player.transform.position.z + startPosition.z), Time.deltaTime * 10);
-                    transform.RotateAround(myPosition, new Vector3(0, transform.position.y, 0), hori2 * Time.deltaTime);
+                    anim.SetBool("IsAiming", false);
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, startPosition, aimSpeed * Time.deltaTime); ;
                 }
                 break;
 

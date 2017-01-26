@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: a8ba99669ffa4fc46a138024ebdb97c4
-timeCreated: 1484769032
-licenseType: Free
+guid: 05999c6e45a99d148901911366c5e7a9
+timeCreated: 1485395054
+licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
@@ -233,7 +233,7 @@ ModelImporter:
     400222: TongueBack
     400224: TongueMid
     400226: TongueTip
-    7400000: crouch_turn_left
+    7400000: crouch_firing
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -257,10 +257,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: crouch_turn_left
+      name: crouch_firing
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 38
+      lastFrame: 23
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

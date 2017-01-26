@@ -18,6 +18,9 @@ public class Movement : MonoBehaviour
     bool settingLandBool;
     bool horiPressed;
     bool vertPressed;
+    bool isSprinting;
+    bool isCrouching;
+    bool isMoving;
 
     Animator anim;
     Rigidbody rb;
@@ -41,9 +44,15 @@ public class Movement : MonoBehaviour
         vert = inputDevice.LeftStickY;
 
         if (hori != 0 || vert != 0)
+        {
+            isMoving = true;
             anim.SetBool("IsMoving", true);
+        }
         else
+        {
+            isMoving = false;
             anim.SetBool("IsMoving", false);
+        }
 
         CheckGroundedStatus();
 
@@ -52,6 +61,40 @@ public class Movement : MonoBehaviour
             anim.SetFloat("Horizontal", hori);
             anim.SetFloat("Vertical", vert);
             anim.SetFloat("Horizontal2", hori2);
+            
+            if(inputDevice.LeftStickButton.IsPressed)
+            {
+                isSprinting = true;
+                anim.SetBool("IsSprinting", true);
+            }
+            else
+            {
+                isSprinting = false;
+                anim.SetBool("IsSprinting", false);
+            }
+
+            if(inputDevice.RightStickButton.WasPressed)
+            {
+                if(!isCrouching)
+                {
+                    isCrouching = true;
+                    anim.SetBool("IsCrouching", true);
+                }
+                else
+                {
+                    isCrouching = false;
+                    anim.SetBool("IsCrouching", false);
+                }
+            }
+
+            if(isCrouching && isMoving)
+            {
+                anim.SetBool("IsCrouchMoving", true);
+            }
+            else
+            {
+                anim.SetBool("IsCrouchMoving", false);
+            }
         }
 
         if (inputDevice.Action1.WasPressed && isGrounded)
@@ -81,8 +124,24 @@ public class Movement : MonoBehaviour
         else
             m_speed = speed;
 
-        transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
-        transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));   
+        if(!isCrouching)
+        {
+            if (!isSprinting)
+            {
+                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
+                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+            }
+            else
+            {
+                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 1.5f, 0f, vert * Time.deltaTime * m_speed * 1.5f));
+                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+            }
+        }
+        else
+        {
+            transform.Translate(new Vector3(hori * Time.deltaTime * m_speed *.5f, 0f, vert * Time.deltaTime * m_speed *.5f));
+            transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+        }
     }
 
     void CheckGroundedStatus()

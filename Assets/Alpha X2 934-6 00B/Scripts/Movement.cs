@@ -21,14 +21,18 @@ public class Movement : MonoBehaviour
     bool isSprinting;
     bool isCrouching;
     bool isMoving;
+    [HideInInspector]
+    public bool isProne;
 
     Animator anim;
     Rigidbody rb;
 
     InputDevice inputDevice;
+    CustomCamera customCamera;
 
 	void Start ()
     {
+        customCamera = transform.FindChild("Main Camera").gameObject.GetComponent<CustomCamera>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         originalGroundCheckDistance = groundCheckDistance;
@@ -73,7 +77,15 @@ public class Movement : MonoBehaviour
                 anim.SetBool("IsSprinting", false);
             }
 
-            if(inputDevice.RightStickButton.WasPressed)
+            if (inputDevice.RightStickButton.WasRepeated)
+            {
+                if (!isProne)
+                {
+                    isProne = true;
+                    anim.SetBool("IsProne", true);
+                }
+            }
+            if (inputDevice.RightStickButton.WasPressed)
             {
                 if(!isCrouching)
                 {
@@ -82,12 +94,23 @@ public class Movement : MonoBehaviour
                 }
                 else
                 {
+                    isProne = false;
                     isCrouching = false;
+                    anim.SetBool("IsProne", false);
                     anim.SetBool("IsCrouching", false);
                 }
             }
 
-            if(isCrouching && isMoving)
+            if (isProne && isMoving)
+            {
+                anim.SetBool("IsProneMoving", true);
+            }
+            else
+            {
+                anim.SetBool("IsProneMoving", false);
+            }
+
+            if (isCrouching && isMoving)
             {
                 anim.SetBool("IsCrouchMoving", true);
             }
@@ -97,7 +120,7 @@ public class Movement : MonoBehaviour
             }
         }
 
-        if (inputDevice.Action1.WasPressed && isGrounded)
+        if (inputDevice.Action1.WasPressed && isGrounded && !isProne)
         {
             anim.SetBool("isJumping", true);
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
@@ -124,23 +147,44 @@ public class Movement : MonoBehaviour
         else
             m_speed = speed;
 
-        if(!isCrouching)
+        if(!isProne)
         {
-            if (!isSprinting)
+            if (!isCrouching)
             {
-                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
-                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+                if (!isSprinting)
+                {
+                    //Walking / Running
+                    transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
+                    transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+                }
+                else
+                {
+                    //Sprinting
+                    transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 1.5f, 0f, vert * Time.deltaTime * m_speed * 1.5f));
+                    transform.Rotate(new Vector3(0, hori2 * rotationSpeed * 1.5f * Time.deltaTime, 0));
+                }
             }
             else
             {
-                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 1.5f, 0f, vert * Time.deltaTime * m_speed * 1.5f));
-                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+                //Crouching
+                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * .5f, 0f, vert * Time.deltaTime * m_speed * .5f));
+                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * .5f * Time.deltaTime, 0));
             }
         }
         else
         {
-            transform.Translate(new Vector3(hori * Time.deltaTime * m_speed *.5f, 0f, vert * Time.deltaTime * m_speed *.5f));
-            transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+            if(customCamera.isAiming)
+            {
+                //You can't walk while aiming in prone.
+                anim.SetFloat("Horizontal", 0);
+                anim.SetFloat("Vertical", 0);
+            }
+            else
+            {
+                //Proning
+                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * .25f, 0f, vert * Time.deltaTime * m_speed * .25f));
+                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * .25f * Time.deltaTime, 0));
+            }
         }
     }
 

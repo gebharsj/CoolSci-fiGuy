@@ -15,6 +15,8 @@ public class CustomCamera : MonoBehaviour
 
     float hori2;
     Vector3 myPosition;
+    [HideInInspector]
+    public bool isAiming;
 
     public enum CameraView
     {
@@ -40,11 +42,13 @@ public class CustomCamera : MonoBehaviour
             case CameraView.ThirdPerson:
                 if (inputDevice.LeftTrigger.IsPressed)
                 {
+                    isAiming = true;
                     anim.SetBool("IsAiming", true);
                     transform.localPosition = Vector3.Lerp(transform.localPosition, aimPosition, aimSpeed * Time.deltaTime);
                 }
                 else
                 {
+                    isAiming = false;
                     anim.SetBool("IsAiming", false);
                     transform.localPosition = Vector3.Lerp(transform.localPosition, startPosition, aimSpeed * Time.deltaTime); ;
                 }

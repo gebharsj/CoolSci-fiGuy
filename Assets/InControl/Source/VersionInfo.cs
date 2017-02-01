@@ -1,10 +1,10 @@
+using System;
+using System.Text.RegularExpressions;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using System;
-	using System.Text.RegularExpressions;
-	using UnityEngine;
-
-
 	/// <summary>
 	/// Encapsulates a comparable version number.
 	/// This version number generally conforms to the semantic version system, 
@@ -63,9 +63,9 @@ namespace InControl
 		{
 			return new VersionInfo() {
 				Major = 1,
-				Minor = 6,
-				Patch = 9,
-				Build = 8777
+				Minor = 5,
+				Patch = 12,
+				Build = 6556
 			};
 		}
 

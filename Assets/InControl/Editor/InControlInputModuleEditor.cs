@@ -1,11 +1,12 @@
-﻿#if UNITY_EDITOR && (UNITY_4_6 || UNITY_4_7 || UNITY_5)
+﻿#if UNITY_EDITOR && (UNITY_4_6 || UNITY_5 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5)
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEditor;
-	using UnityEngine;
-
-
-	[CustomEditor( typeof( InControlInputModule ) )]
+	[CustomEditor( typeof(InControlInputModule) )]
 	public class InControlInputModuleEditor : Editor
 	{
 		SerializedProperty submitButton;
@@ -54,7 +55,7 @@ namespace InControl
 			allowMobileDevice.boolValue = EditorGUILayout.Toggle( "Allow Mobile Device", allowMobileDevice.boolValue );
 			allowMouseInput.boolValue = EditorGUILayout.Toggle( "Allow Mouse Input", allowMouseInput.boolValue );
 			focusOnMouseHover.boolValue = EditorGUILayout.Toggle( "Focus Mouse On Hover", focusOnMouseHover.boolValue );
-
+				
 			serializedObject.ApplyModifiedProperties();
 		}
 	}

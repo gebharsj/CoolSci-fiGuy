@@ -1,9 +1,9 @@
-﻿namespace InterfaceMovement
+﻿using UnityEngine;
+using InControl;
+
+
+namespace InterfaceMovement
 {
-	using InControl;
-	using UnityEngine;
-
-
 	public class ButtonManager : MonoBehaviour
 	{
 		public Button focusedButton;

@@ -1,15 +1,17 @@
 #if UNITY_EDITOR
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEditor;
-
-
-	[CustomEditor( typeof( TouchStickControl ) )]
+	[CustomEditor( typeof(TouchStickControl) )]
 	public class TouchStickControlEditor : TouchControlEditor
 	{
 		void OnEnable()
 		{
-			headerTexture = Internal.EditorTextures.TouchStickHeader;
+			LoadHeaderImage( "Images/TouchStickHeader.png" );
 		}
 	}
 }

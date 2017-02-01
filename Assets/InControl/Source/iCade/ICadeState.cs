@@ -1,9 +1,8 @@
 #if UNITY_IOS || UNITY_EDITOR
+using System;
+
 namespace InControl
 {
-	using System;
-
-
 	[Flags]
 	public enum ICadeState
 	{

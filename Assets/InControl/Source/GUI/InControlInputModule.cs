@@ -1,10 +1,11 @@
-﻿#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+﻿#if UNITY_4_6 || UNITY_5
+using UnityEngine;
+using UnityEngine.EventSystems;
+using InControl;
+
+
 namespace InControl
 {
-	using UnityEngine;
-	using UnityEngine.EventSystems;
-
-
 	[AddComponentMenu( "Event/InControl Input Module" )]
 	public class InControlInputModule : StandaloneInputModule
 	{
@@ -62,9 +63,9 @@ namespace InControl
 
 		public override bool IsModuleSupported()
 		{
-#if UNITY_WII || UNITY_PS3 || UNITY_PS4 || UNITY_XBOX360 || UNITY_XBOXONE
+			#if UNITY_WII || UNITY_PS3 || UNITY_PS4 || UNITY_XBOX360 || UNITY_XBOXONE
 			return true;
-#endif
+			#endif
 
 			return allowMobileDevice || Input.mousePresent;
 		}
@@ -84,13 +85,13 @@ namespace InControl
 			shouldActivate |= CancelWasPressed;
 			shouldActivate |= VectorWasPressed;
 
-#if !UNITY_IOS || UNITY_EDITOR
+			#if !UNITY_IOS || UNITY_EDITOR
 			if (allowMouseInput)
 			{
 				shouldActivate |= MouseHasMoved;
 				shouldActivate |= MouseButtonIsPressed;
 			}
-#endif
+			#endif
 
 			return shouldActivate;
 		}
@@ -131,12 +132,12 @@ namespace InControl
 				}
 			}
 
-#if !UNITY_IOS || UNITY_EDITOR
+			#if !UNITY_IOS || UNITY_EDITOR
 			if (allowMouseInput)
 			{
 				ProcessMouseEvent();
 			}
-#endif
+			#endif
 		}
 
 
@@ -151,13 +152,13 @@ namespace InControl
 
 			if (SubmitWasPressed)
 			{
-				//				ExecuteEvents.Execute( eventSystem.currentSelectedGameObject, new PointerEventData( EventSystem.current ), ExecuteEvents.pointerDownHandler );
+//				ExecuteEvents.Execute( eventSystem.currentSelectedGameObject, new PointerEventData( EventSystem.current ), ExecuteEvents.pointerDownHandler );
 				ExecuteEvents.Execute( eventSystem.currentSelectedGameObject, eventData, ExecuteEvents.submitHandler );
 			}
 			else
 			if (SubmitWasReleased)
 			{
-				//				ExecuteEvents.Execute( eventSystem.currentSelectedGameObject, new PointerEventData( EventSystem.current ), ExecuteEvents.pointerUpHandler );
+//				ExecuteEvents.Execute( eventSystem.currentSelectedGameObject, new PointerEventData( EventSystem.current ), ExecuteEvents.pointerUpHandler );
 			}
 
 			if (CancelWasPressed)
@@ -220,7 +221,7 @@ namespace InControl
 			lastVectorState = thisVectorState;
 			thisVectorState = Vector2.zero;
 
-			var dir = MoveAction ?? direction;
+			TwoAxisInputControl dir = MoveAction ?? direction;
 
 			if (Utility.AbsoluteIsOverThreshold( dir.X, analogMoveThreshold ))
 			{
@@ -262,7 +263,7 @@ namespace InControl
 		}
 
 
-		public InputDevice Device
+		InputDevice Device
 		{
 			set
 			{
@@ -386,11 +387,11 @@ namespace InControl
 		}
 
 
-		// Copied from StandaloneInputModule where these are marked private instead of protected in Unity 5.0 / 5.1
-		#region Unity 5.0 / 5.1 compatibility.
+		#region Unity 5.0 compatibility.
 
-#if UNITY_5_0 || UNITY_5_1
-		
+		// Copied from StandaloneInputModule where these are marked private instead of protected in Unity 5.0
+		#if UNITY_5_0
+
 		bool SendUpdateEventToSelectedObject()
 		{
 			if (eventSystem.currentSelectedGameObject == null)
@@ -511,7 +512,7 @@ namespace InControl
 			return pressed || released || pointerData.IsPointerMoving() || pointerData.IsScrolling();
 		}
 
-#endif
+		#endif
 
 		#endregion
 	}

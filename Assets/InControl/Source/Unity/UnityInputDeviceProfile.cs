@@ -1,17 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using System;
-	using System.Linq;
-	using System.Text.RegularExpressions;
-	using UnityEngine;
-
-
 	public sealed class AutoDiscover : Attribute
 	{
 	}
 
 
-	public class UnityInputDeviceProfile : UnityInputDeviceProfileBase
+	public class UnityInputDeviceProfile : InputDeviceProfile
 	{
 		[SerializeField]
 		protected string[] JoystickNames;
@@ -22,31 +23,32 @@ namespace InControl
 		[SerializeField]
 		protected string LastResortRegex;
 
-		[SerializeField]
-		public VersionInfo MinUnityVersion { get; protected set; }
-
-		[SerializeField]
-		public VersionInfo MaxUnityVersion { get; protected set; }
-
 
 		public UnityInputDeviceProfile()
 		{
 			Sensitivity = 1.0f;
 			LowerDeadZone = 0.2f;
 			UpperDeadZone = 0.9f;
-			MinUnityVersion = new VersionInfo( 3, 0, 0, 0 );
-			MaxUnityVersion = new VersionInfo( 9, 0, 0, 0 );
+		}
+
+
+		public override bool IsKnown
+		{ 
+			get
+			{
+				return true;
+			}
 		}
 
 
 		public override bool IsJoystick
-		{
+		{ 
 			get
-			{
+			{ 
 				return (LastResortRegex != null) ||
 				(JoystickNames != null && JoystickNames.Length > 0) ||
 				(JoystickRegex != null && JoystickRegex.Length > 0);
-			}
+			} 
 		}
 
 
@@ -67,7 +69,7 @@ namespace InControl
 
 			if (JoystickRegex != null)
 			{
-				for (var i = 0; i < JoystickRegex.Length; i++)
+				for (int i = 0; i < JoystickRegex.Length; i++)
 				{
 					if (Regex.IsMatch( joystickName, JoystickRegex[i], RegexOptions.IgnoreCase ))
 					{
@@ -100,26 +102,6 @@ namespace InControl
 		{
 			return HasJoystickName( joystickName ) || HasLastResortRegex( joystickName );
 		}
-
-
-		public override bool IsSupportedOnThisPlatform
-		{
-			get
-			{
-				return IsSupportedOnThisVersionOfUnity && base.IsSupportedOnThisPlatform;
-			}
-		}
-
-
-		bool IsSupportedOnThisVersionOfUnity
-		{
-			get
-			{
-				var unityVersion = VersionInfo.UnityVersion();
-				return unityVersion >= MinUnityVersion && unityVersion <= MaxUnityVersion;
-			}
-		}
-
 
 		/*
 		#region Serialization
@@ -399,7 +381,7 @@ namespace InControl
 				TargetRange = InputRange.ZeroToOne
 			};
 		}
-
+		
 		protected static InputControlMapping DPadDownMapping2( InputControlSource analog )
 		{
 			return new InputControlMapping {
@@ -411,14 +393,7 @@ namespace InControl
 			};
 		}
 
-
-		protected static InputControlSource MouseButton0 = new UnityMouseButtonSource( 0 );
-		protected static InputControlSource MouseButton1 = new UnityMouseButtonSource( 1 );
-		protected static InputControlSource MouseButton2 = new UnityMouseButtonSource( 2 );
-		protected static InputControlSource MouseXAxis = new UnityMouseAxisSource( "x" );
-		protected static InputControlSource MouseYAxis = new UnityMouseAxisSource( "y" );
-		protected static InputControlSource MouseScrollWheel = new UnityMouseAxisSource( "z" );
-
 		#endregion
 	}
 }
+

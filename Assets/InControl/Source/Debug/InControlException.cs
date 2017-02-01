@@ -1,8 +1,9 @@
-﻿namespace InControl
+﻿using System;
+using System.Runtime.Serialization;
+
+
+namespace InControl
 {
-	using System;
-
-
 	[Serializable]
 	public class InControlException : Exception
 	{

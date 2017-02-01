@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
@@ -9,10 +12,7 @@
 			Name = "Amazon Fire TV Remote";
 			Meta = "Amazon Fire TV Remote on Amazon Fire TV";
 
-			DeviceClass = InputDeviceClass.Remote;
-			DeviceStyle = InputDeviceStyle.AmazonFireTV;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Amazon AFT",
 			};
 

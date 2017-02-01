@@ -1,8 +1,9 @@
+using System;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEngine;
-
-
 	public class UnityInputDeviceProfileList : ScriptableObject
 	{
 		public static string[] Profiles = new string[] 
@@ -15,13 +16,10 @@ namespace InControl
 			"InControl.AndroidTVProfile",
 			"InControl.AndroidTVRemoteProfile",
 			"InControl.AppleMFiProfile",
-			"InControl.AppleTVControllerProfile",
-			"InControl.AppleTVRemoteProfile",
 			"InControl.BuffaloClassicAmazonProfile",
 			"InControl.BuffaloClassicMacProfile",
 			"InControl.BuffaloClassicWinProfile",
 			"InControl.ExecutionerXProfile",
-			"InControl.FlareAndroidProfile",
 			"InControl.GameCubeWinProfile",
 			"InControl.GameStickLinuxProfile",
 			"InControl.GameStickProfile",
@@ -31,7 +29,6 @@ namespace InControl
 			"InControl.GreenThrottleAtlasAndroidProfile",
 			"InControl.HamaBlackForceWinProfile",
 			"InControl.IpegaPG9023AndroidProfile",
-			"InControl.IpegaPG9025AndroidProfile",
 			"InControl.LevelUpBlackHawkWinProfile",
 			"InControl.LogitechF310LinuxProfile",
 			"InControl.LogitechF310ModeDMacProfile",
@@ -84,7 +81,6 @@ namespace InControl
 			"InControl.PlayStation4MacBTProfile",
 			"InControl.PlayStation4MacUSBProfile",
 			"InControl.PlayStation4Profile",
-			"InControl.PlayStation4SteamLinkMacProfile",
 			"InControl.PlayStation4WinProfile",
 			"InControl.PlayStationVitaPSMProfile",
 			"InControl.RazerServalForgeTVProfile",
@@ -99,7 +95,6 @@ namespace InControl
 			"InControl.SteelSeriesFreeMacProfile",
 			"InControl.SteelSeriesFreeWinProfile",
 			"InControl.SteelSeriesStratusXLAndroidProfile",
-			"InControl.SteelSeriesStratusXLWinProfile",
 			"InControl.ValveStreamingWinProfile",
 			"InControl.Xbox360AmazonProfile",
 			"InControl.Xbox360AndroidProfile",
@@ -109,7 +104,6 @@ namespace InControl
 			"InControl.Xbox360WinProfile",
 			"InControl.XboxOneMacProfile",
 			"InControl.XboxOneProfile",
-			"InControl.XboxOneWin10AEProfile",
 			"InControl.XboxOneWin10Profile",
 			"InControl.XboxOneWinProfile",
 		};

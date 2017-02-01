@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using System.Collections.Generic;
-
-
 	public abstract class InputDeviceManager
 	{
 		protected List<InputDevice> devices = new List<InputDevice>();

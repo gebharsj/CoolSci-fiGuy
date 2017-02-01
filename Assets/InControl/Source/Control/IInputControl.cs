@@ -1,4 +1,8 @@
-﻿namespace InControl
+﻿using System;
+using UnityEngine;
+
+
+namespace InControl
 {
 	public interface IInputControl
 	{

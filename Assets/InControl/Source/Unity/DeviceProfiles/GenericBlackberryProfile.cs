@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,7 +12,7 @@ namespace InControl
 			Name = "Generic Gamepad";
 			Meta = "Generic Gamepad on BlackBerry";
 
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Blackberry",
 			};
 

@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,10 +12,7 @@ namespace InControl
 			Name = "PlayStation 4 Controller";
 			Meta = "PlayStation 4 Controller on Linux";
 
-			DeviceClass = InputDeviceClass.Controller;
-			DeviceStyle = InputDeviceStyle.PlayStation4;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Linux"
 			};
 
@@ -78,7 +78,7 @@ namespace InControl
 				},
 				new InputControlMapping {
 					Handle = "TouchPad Button",
-					Target = InputControlType.TouchPadButton,
+					Target = InputControlType.TouchPadTap,
 					Source = Button13
 				},
 			};

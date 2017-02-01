@@ -1,4 +1,8 @@
-﻿namespace InControl
+﻿using System;
+using UnityEngine;
+
+
+namespace InControl
 {
 	public class DeviceBindingSourceListener : BindingSourceListener
 	{
@@ -70,8 +74,8 @@
 		{
 			if (device.IsKnown)
 			{
-				var controlCount = device.Controls.Count;
-				for (var i = 0; i < controlCount; i++)
+				var controlCount = device.Controls.Length;
+				for (int i = 0; i < controlCount; i++)
 				{
 					var control = device.Controls[i];
 					if (control != null && IsPressed( control ))

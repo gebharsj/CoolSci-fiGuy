@@ -1,3 +1,7 @@
+using System;
+using UnityEngine;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,10 +13,7 @@ namespace InControl
 			Name = "PlayStation 3 Controller";
 			Meta = "PlayStation 3 Controller on Android";
 
-			DeviceClass = InputDeviceClass.Controller;
-			DeviceStyle = InputDeviceStyle.PlayStation3;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Android"
 			};
 

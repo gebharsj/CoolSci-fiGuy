@@ -1,3 +1,5 @@
+using System;
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,9 +11,7 @@ namespace InControl
 			Name = "Red Samurai Wireless Controller";
 			Meta = "Red Samurai Wireless Controller on Android";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Android"
 			};
 

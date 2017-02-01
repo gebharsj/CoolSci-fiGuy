@@ -2,11 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 #if UNITY_EDITOR
+using UnityEngine;
+using UnityEditor;
+using System;
+
+
 namespace InControl.ReorderableList.Internal
 {
-	using UnityEngine;
-	using System;
-
 
 	/// <summary>
 	/// Resources to assist with reorderable list control.
@@ -127,7 +129,7 @@ namespace InControl.ReorderableList.Internal
 		/// </summary>
 		private static void GenerateSpecialTextures()
 		{
-			var splitterColor = InControl.Internal.EditorUtility.IsProSkin
+			var splitterColor = EditorGUIUtility.isProSkin
 				? new Color( 1f, 1f, 1f, 0.14f )
 				: new Color( 0.59f, 0.59f, 0.59f, 0.55f );
 			texItemSplitter = CreatePixelTexture( "(Generated) Item Splitter", splitterColor );
@@ -164,7 +166,7 @@ namespace InControl.ReorderableList.Internal
 		/// </summary>
 		private static void LoadResourceAssets()
 		{
-			var skin = InControl.Internal.EditorUtility.IsProSkin ? s_DarkSkin : s_LightSkin;
+			var skin = EditorGUIUtility.isProSkin ? s_DarkSkin : s_LightSkin;
 			s_Cached = new Texture2D[skin.Length];
 
 			for (int i = 0; i < s_Cached.Length; ++i)

@@ -1,10 +1,12 @@
-﻿namespace InControl
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+
+namespace InControl
 {
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-
-
 	/// <summary>
 	/// Represents a combination of one or more keys, including modifiers, up to a maximum of eight.
 	/// </summary>
@@ -84,7 +86,7 @@
 					return false;
 				}
 
-				var isPressed = true;
+				bool isPressed = true;
 				for (var i = 0; i < size; i++)
 				{
 					var key = GetInt( i );
@@ -102,22 +104,22 @@
 
 			if (modifiersAsKeys)
 			{
+				for (var i = 1; i < 5; i++)
+				{
+					if (KeyInfo.KeyList[i].IsPressed)
+					{
+						keyCombo.AddInt( i );
+					}
+				}
+			}
+			else
+			{
 				for (var i = 5; i < 13; i++)
 				{
 					if (KeyInfo.KeyList[i].IsPressed)
 					{
 						keyCombo.AddInt( i );
 						return keyCombo;
-					}
-				}
-			}
-			else
-			{
-				for (var i = 1; i < 5; i++)
-				{
-					if (KeyInfo.KeyList[i].IsPressed)
-					{
-						keyCombo.AddInt( i );
 					}
 				}
 			}

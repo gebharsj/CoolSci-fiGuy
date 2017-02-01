@@ -1,8 +1,9 @@
-﻿namespace MultiplayerWithBindingsExample
+﻿using System;
+using InControl;
+
+
+namespace MultiplayerWithBindingsExample
 {
-	using InControl;
-
-
 	public class PlayerActions : PlayerActionSet
 	{
 		public PlayerAction Green;

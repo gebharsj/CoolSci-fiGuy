@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
@@ -9,7 +12,7 @@
 			Name = "Generic Controller";
 			Meta = "Generic Controller on Linux";
 
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Linux"
 			};
 

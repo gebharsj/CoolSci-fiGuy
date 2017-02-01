@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// D-Pad doesn't work.
 	//
@@ -11,9 +14,7 @@
 			Name = "Nyko PlayPad Pro";
 			Meta = "Nyko PlayPad Pro on Amazon Fire TV";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Amazon AFT"
 			};
 

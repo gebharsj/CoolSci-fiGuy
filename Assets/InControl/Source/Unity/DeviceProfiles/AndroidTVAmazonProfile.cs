@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
@@ -7,11 +10,9 @@
 		public AndroidTVAmazonProfile()
 		{
 			Name = "Android TV Controller";
-			Meta = "Android TV Controller on Amazon Fire TV";
+			Meta = "Android TV Controller on Android TV";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Amazon AFT"
 			};
 

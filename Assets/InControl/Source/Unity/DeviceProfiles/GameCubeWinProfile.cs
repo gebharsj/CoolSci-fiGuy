@@ -1,3 +1,5 @@
+using System;
+
 namespace InControl
 {
 	// @cond nodoc
@@ -10,9 +12,7 @@ namespace InControl
 			Name = "GameCube Controller";
 			Meta = "GameCube Controller on Windows";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Windows"
 			};
 

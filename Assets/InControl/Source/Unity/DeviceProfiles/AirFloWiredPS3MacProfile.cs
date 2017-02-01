@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
@@ -9,10 +12,7 @@
 			Name = "Air Flo Wired PS3 Controller";
 			Meta = "Air Flo Wired PS3 Controller on Mac";
 
-			DeviceClass = InputDeviceClass.Controller;
-			DeviceStyle = InputDeviceStyle.PlayStation3;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"OS X"
 			};
 

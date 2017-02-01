@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
@@ -9,10 +12,7 @@
 			Name = "Logitech F310 Controller";
 			Meta = "Logitech F310 Controller on Mac (Mode D)";
 
-			DeviceClass = InputDeviceClass.Controller;
-			DeviceStyle = InputDeviceStyle.Xbox360;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"OS X"
 			};
 

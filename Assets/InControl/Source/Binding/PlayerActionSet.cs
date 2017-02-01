@@ -1,40 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
-	using System.IO;
-	using UnityEngine;
-
-
 	/// <summary>
 	/// An action set represents a set of actions, usually for a single player. This class must be subclassed to be used.
-	/// An action set can contain both explicit, bindable single value actions (for example, "Jump", "Left" and "Right") and implicit,
+	/// An action set can contain both explicit, bindable single value actions (for example, "Jump", "Left" and "Right") and implicit, 
 	/// aggregate actions which combine together other actions into one or two axes, for example "Move", which might consist
-	/// of "Left", "Right", "Up" and "Down" filtered into a single two-axis control with its own applied circular deadzone,
+	/// of "Left", "Right", "Up" and "Down" filtered into a single two-axis control with its own applied circular deadzone, 
 	/// queryable vector value, etc.
 	/// </summary>
 	public abstract class PlayerActionSet
 	{
 		/// <summary>
-		/// Optionally specifies a device which this action set should query from, if applicable.
-		/// When set to <c>null</c> (default) this action set will try to find an active device when required.
+		/// The device which this set should query from, if applicable. 
+		/// When set to <c>null</c> this set will query <see cref="InputManager.ActiveDevice" /> when required.
 		/// </summary>
 		public InputDevice Device { get; set; }
 
 		/// <summary>
-		/// A list of devices which this action set should include when searching for an active device.
-		/// When empty, all attached devices will be considered.
-		/// </summary>
-		public List<InputDevice> IncludeDevices { get; private set; }
-
-		/// <summary>
-		/// A list of devices which this action set should exclude when searching for an active device.
-		/// </summary>
-		public List<InputDevice> ExcludeDevices { get; private set; }
-
-		/// <summary>
-		/// Gets the actions in this action set as a readonly collection.
+		/// Gets the actions in this set as a readonly collection.
 		/// </summary>
 		public ReadOnlyCollection<PlayerAction> Actions { get; private set; }
 
@@ -44,31 +33,14 @@ namespace InControl
 		public ulong UpdateTick { get; protected set; }
 
 		/// <summary>
-		/// The binding source type that last provided input to this action set.
+		/// The binding source type that provided input to this action set.
 		/// </summary>
 		public BindingSourceType LastInputType = BindingSourceType.None;
-
-		/// <summary>
-		/// Occurs when the binding source type that last provided input to this action set changes.
-		/// </summary>
-		public event Action<BindingSourceType> OnLastInputTypeChanged;
-
-		/// <summary>
-		/// Updated when <see cref="LastInputType"/> changes.
-		/// </summary>
-		public ulong LastInputTypeChangedTick;
 
 		/// <summary>
 		/// Whether this action set should produce input. Default: <c>true</c>
 		/// </summary>
 		public bool Enabled { get; set; }
-
-
-		/// <summary>
-		/// This property can be used to store whatever arbitrary game data you want on this action set.
-		/// </summary>
-		public object UserData { get; set; }
-
 
 		List<PlayerAction> actions = new List<PlayerAction>();
 		List<PlayerOneAxisAction> oneAxisActions = new List<PlayerOneAxisAction>();
@@ -80,11 +52,8 @@ namespace InControl
 
 		protected PlayerActionSet()
 		{
-			Enabled = true;
-			Device = null;
-			IncludeDevices = new List<InputDevice>();
-			ExcludeDevices = new List<InputDevice>();
 			Actions = new ReadOnlyCollection<PlayerAction>( actions );
+			Enabled = true;
 			InputManager.AttachPlayerActionSet( this );
 		}
 
@@ -95,7 +64,6 @@ namespace InControl
 		/// </summary>
 		public void Destroy()
 		{
-			OnLastInputTypeChanged = null;
 			InputManager.DetachPlayerActionSet( this );
 		}
 
@@ -107,21 +75,18 @@ namespace InControl
 		/// <exception cref="InControlException">Thrown when trying to create an action with a non-unique name for this set.</exception>
 		protected PlayerAction CreatePlayerAction( string name )
 		{
-			return new PlayerAction( name, this );
-		}
+			var action = new PlayerAction( name, this );
+			action.Device = Device ?? InputManager.ActiveDevice;
 
-
-		internal void AddPlayerAction( PlayerAction action )
-		{
-			action.Device = FindActiveDevice();
-
-			if (actionsByName.ContainsKey( action.Name ))
+			if (actionsByName.ContainsKey( name ))
 			{
-				throw new InControlException( "Action '" + action.Name + "' already exists in this set." );
+				throw new InControlException( "Action '" + name + "' already exists in this set." );
 			}
 
 			actions.Add( action );
-			actionsByName.Add( action.Name, action );
+			actionsByName.Add( name, action );
+
+			return action;
 		}
 
 
@@ -164,48 +129,12 @@ namespace InControl
 		}
 
 
-		/// <summary>
-		/// Gets the action with the specified action name. If the action does not exist, <c>KeyNotFoundException</c> is thrown.
-		/// </summary>
-		/// <param name="actionName">The name of the action to get.</param>
-		public PlayerAction this[string actionName]
-		{
-			get
-			{
-				PlayerAction action;
-				if (actionsByName.TryGetValue( actionName, out action ))
-				{
-					return action;
-				}
-				throw new KeyNotFoundException( "Action '" + actionName + "' does not exist in this action set." );
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the action with the specified action name. If the action does not exist, it returns <c>null</c>.
-		/// </summary>
-		/// <param name="actionName">The name of the action to get.</param>
-		public PlayerAction GetPlayerActionByName( string actionName )
-		{
-			PlayerAction action;
-			if (actionsByName.TryGetValue( actionName, out action ))
-			{
-				return action;
-			}
-			return null;
-		}
-
-
 		internal void Update( ulong updateTick, float deltaTime )
 		{
-			var device = Device ?? FindActiveDevice();
-
-			var lastInputType = LastInputType;
-			var lastInputTypeChangedTick = LastInputTypeChangedTick;
+			var device = Device ?? InputManager.ActiveDevice;
 
 			var actionsCount = actions.Count;
-			for (var i = 0; i < actionsCount; i++)
+			for (int i = 0; i < actionsCount; i++)
 			{
 				var action = actions[i];
 
@@ -214,39 +143,20 @@ namespace InControl
 				if (action.UpdateTick > UpdateTick)
 				{
 					UpdateTick = action.UpdateTick;
-					activeDevice = action.ActiveDevice;
-				}
-
-				if (action.LastInputTypeChangedTick > lastInputTypeChangedTick)
-				{
-					lastInputType = action.LastInputType;
-					lastInputTypeChangedTick = action.LastInputTypeChangedTick;
+					LastInputType = action.LastInputType;
 				}
 			}
 
 			var oneAxisActionsCount = oneAxisActions.Count;
-			for (var i = 0; i < oneAxisActionsCount; i++)
+			for (int i = 0; i < oneAxisActionsCount; i++)
 			{
 				oneAxisActions[i].Update( updateTick, deltaTime );
 			}
 
 			var twoAxisActionsCount = twoAxisActions.Count;
-			for (var i = 0; i < twoAxisActionsCount; i++)
+			for (int i = 0; i < twoAxisActionsCount; i++)
 			{
 				twoAxisActions[i].Update( updateTick, deltaTime );
-			}
-
-			if (lastInputTypeChangedTick > LastInputTypeChangedTick)
-			{
-				var triggerEvent = lastInputType != LastInputType;
-
-				LastInputType = lastInputType;
-				LastInputTypeChangedTick = lastInputTypeChangedTick;
-
-				if (OnLastInputTypeChanged != null && triggerEvent)
-				{
-					OnLastInputTypeChanged.Invoke( lastInputType );
-				}
 			}
 		}
 
@@ -257,61 +167,29 @@ namespace InControl
 		public void Reset()
 		{
 			var actionCount = actions.Count;
-			for (var i = 0; i < actionCount; i++)
+			for (int i = 0; i < actionCount; i++)
 			{
 				actions[i].ResetBindings();
 			}
 		}
 
 
-		InputDevice FindActiveDevice()
-		{
-			var hasIncludeDevices = IncludeDevices.Count > 0;
-			var hasExcludeDevices = ExcludeDevices.Count > 0;
-
-			if (hasIncludeDevices || hasExcludeDevices)
-			{
-				var foundDevice = InputDevice.Null;
-				var deviceCount = InputManager.Devices.Count;
-				for (var i = 0; i < deviceCount; i++)
-				{
-					var device = InputManager.Devices[i];
-					if (device != foundDevice && device.LastChangedAfter( foundDevice ))
-					{
-						if (hasExcludeDevices && ExcludeDevices.Contains( device ))
-						{
-							continue;
-						}
-
-						if (!hasIncludeDevices || IncludeDevices.Contains( device ))
-						{
-							foundDevice = device;
-						}
-					}
-				}
-				return foundDevice;
-			}
-
-			return InputManager.ActiveDevice;
-		}
-
-
 		public void ClearInputState()
 		{
 			var actionsCount = actions.Count;
-			for (var i = 0; i < actionsCount; i++)
+			for (int i = 0; i < actionsCount; i++)
 			{
 				actions[i].ClearInputState();
 			}
 
 			var oneAxisActionsCount = oneAxisActions.Count;
-			for (var i = 0; i < oneAxisActionsCount; i++)
+			for (int i = 0; i < oneAxisActionsCount; i++)
 			{
 				oneAxisActions[i].ClearInputState();
 			}
 
 			var twoAxisActionsCount = twoAxisActions.Count;
-			for (var i = 0; i < twoAxisActionsCount; i++)
+			for (int i = 0; i < twoAxisActionsCount; i++)
 			{
 				twoAxisActions[i].ClearInputState();
 			}
@@ -326,7 +204,7 @@ namespace InControl
 			}
 
 			var actionsCount = actions.Count;
-			for (var i = 0; i < actionsCount; i++)
+			for (int i = 0; i < actionsCount; i++)
 			{
 				if (actions[i].HasBinding( binding ))
 				{
@@ -346,7 +224,7 @@ namespace InControl
 			}
 
 			var actionsCount = actions.Count;
-			for (var i = 0; i < actionsCount; i++)
+			for (int i = 0; i < actionsCount; i++)
 			{
 				actions[i].FindAndRemoveBinding( binding );
 			}
@@ -371,23 +249,8 @@ namespace InControl
 		}
 
 
-		InputDevice activeDevice;
 		/// <summary>
-		/// Gets the currently active device (controller) if present, otherwise returns a null device which does nothing.
-		/// The currently active device is defined as the last device that provided input to an action on this set.
-		/// When LastInputType is not a device (controller), this will return the null device.
-		/// </summary>
-		public InputDevice ActiveDevice
-		{
-			get
-			{
-				return (activeDevice == null) ? InputDevice.Null : activeDevice;
-			}
-		}
-
-
-		/// <summary>
-		/// Returns the state of this action set and all bindings encoded into a string
+		/// Returns the state of this action set and all bindings encoded into a string 
 		/// that you can save somewhere.
 		/// Pass this string to Load() to restore the state of this action set.
 		/// </summary>
@@ -409,7 +272,7 @@ namespace InControl
 					// Write actions.
 					var actionCount = actions.Count;
 					writer.Write( actionCount );
-					for (var i = 0; i < actionCount; i++)
+					for (int i = 0; i < actionCount; i++)
 					{
 						actions[i].Save( writer );
 					}
@@ -430,7 +293,7 @@ namespace InControl
 			{
 				return;
 			}
-
+				
 			try
 			{
 				using (var stream = new MemoryStream( Convert.FromBase64String( data ) ))
@@ -448,7 +311,7 @@ namespace InControl
 						}
 
 						var actionCount = reader.ReadInt32();
-						for (var i = 0; i < actionCount; i++)
+						for (int i = 0; i < actionCount; i++)
 						{
 							PlayerAction action;
 							if (actionsByName.TryGetValue( reader.ReadString(), out action ))
@@ -467,3 +330,4 @@ namespace InControl
 		}
 	}
 }
+

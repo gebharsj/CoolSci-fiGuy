@@ -1,8 +1,8 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
-	using System;
-
-
 	public class BindingListenOptions
 	{
 		/// <summary>

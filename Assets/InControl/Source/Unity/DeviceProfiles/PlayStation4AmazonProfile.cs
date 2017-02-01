@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,15 +12,12 @@ namespace InControl
 			Name = "PlayStation 4 Controller";
 			Meta = "PlayStation 4 Controller on Amazon Fire TV";
 
-			DeviceClass = InputDeviceClass.Controller;
-			DeviceStyle = InputDeviceStyle.PlayStation4;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Amazon AFT"
 			};
 
 			JoystickNames = new[] {
-				"Wireless Controller"
+				"Sony Computer Entertainment Wireless Controller"
 			};
 
 			ButtonMappings = new[] {
@@ -52,6 +52,16 @@ namespace InControl
 					Source = Button5
 				},
 				new InputControlMapping {
+					Handle = "Share",
+					Target = InputControlType.Share,
+					Source = Button11
+				},
+				new InputControlMapping {
+					Handle = "Options",
+					Target = InputControlType.Options,
+					Source = Button10
+				},
+				new InputControlMapping {
 					Handle = "Left Stick Button",
 					Target = InputControlType.LeftStickButton,
 					Source = Button8
@@ -62,13 +72,8 @@ namespace InControl
 					Source = Button9
 				},
 				new InputControlMapping {
-					Handle = "TouchPad Button",
-					Target = InputControlType.TouchPadButton,
-					Source = Button11
-				},
-				new InputControlMapping {
-					Handle = "Options",
-					Target = InputControlType.Options,
+					Handle = "Menu",
+					Target = InputControlType.Menu,
 					Source = MenuKey
 				}
 			};
@@ -92,14 +97,14 @@ namespace InControl
 				new InputControlMapping {
 					Handle = "Left Trigger",
 					Target = InputControlType.LeftTrigger,
-					Source = Analog11,
+					Source = Analog15,
 					SourceRange = InputRange.ZeroToOne,
 					TargetRange = InputRange.ZeroToOne
 				},
 				new InputControlMapping {
 					Handle = "Right Trigger",
 					Target = InputControlType.RightTrigger,
-					Source = Analog12,
+					Source = Analog16,
 					SourceRange = InputRange.ZeroToOne,
 					TargetRange = InputRange.ZeroToOne
 				},

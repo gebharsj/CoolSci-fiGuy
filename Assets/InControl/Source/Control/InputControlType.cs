@@ -1,8 +1,8 @@
+using System;
+
+
 namespace InControl
 {
-	using System;
-
-
 	/// <summary>
 	/// An enumeration of input controls.
 	/// This includes both the standardized set of controls and a variety 
@@ -10,20 +10,22 @@ namespace InControl
 	/// </summary>
 	public enum InputControlType : int
 	{
-		None = 0,
+		None,
 
 		// Standardized controls.
 		//
-		LeftStickUp = 1,
+		LeftStickUp,
 		LeftStickDown,
 		LeftStickLeft,
 		LeftStickRight,
+
 		LeftStickButton,
 
 		RightStickUp,
 		RightStickDown,
 		RightStickLeft,
 		RightStickRight,
+
 		RightStickButton,
 
 		DPadUp,
@@ -31,27 +33,23 @@ namespace InControl
 		DPadLeft,
 		DPadRight,
 
+		Action1,
+		Action2,
+		Action3,
+		Action4,
+
 		LeftTrigger,
 		RightTrigger,
 
 		LeftBumper,
 		RightBumper,
 
-		Action1,
-		Action2,
-		Action3,
-		Action4,
-		Action5,
-		Action6,
-		Action7,
-		Action8,
-		Action9,
-		Action10,
-		Action11,
-		Action12,
+		// This standardized control is an alias that maps onto all command buttons.
+		//
+		Command,
 
 		// Command buttons.
-		Back = 100,
+		Back,
 		Start,
 		Select,
 		System,
@@ -63,54 +61,20 @@ namespace InControl
 		View,
 		Power,
 
-		// Steering controls.
-		PedalLeft = 150,
-		PedalRight,
-		PedalMiddle,
-		GearUp,
-		GearDown,
-
-		// Flight Stick controls.
-		Pitch = 200,
-		Roll,
-		Yaw,
-		ThrottleUp,
-		ThrottleDown,
-		ThrottleLeft,
-		ThrottleRight,
-		POVUp,
-		POVDown,
-		POVLeft,
-		POVRight,
-
 		// Unusual controls.
 		//
-		TiltX = 250,
+		TiltX,
 		TiltY,
 		TiltZ,
 		ScrollWheel,
-
-		[Obsolete( "Use InputControlType.TouchPadButton instead.", true )]
 		TouchPadTap,
-
-		TouchPadButton,
-
 		TouchPadXAxis,
 		TouchPadYAxis,
 
-		// Alias controls; can't be explicitly mapped in a profile.
-		//
-		Command = 300,
-		LeftStickX,
-		LeftStickY,
-		RightStickX,
-		RightStickY,
-		DPadX,
-		DPadY,
 
 		// Generic controls (usually assigned to unknown devices).
 		//
-		Analog0 = 400,
+		Analog0,
 		Analog1,
 		Analog2,
 		Analog3,
@@ -131,7 +95,7 @@ namespace InControl
 		Analog18,
 		Analog19,
 
-		Button0 = 500,
+		Button0,
 		Button1,
 		Button2,
 		Button3,

@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,9 +12,7 @@ namespace InControl
 			Name = "GameStick Controller";
 			Meta = "GameStick Controller on Linux";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Linux"
 			};
 

@@ -1,4 +1,7 @@
-﻿namespace InControl
+﻿using System;
+
+
+namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
@@ -9,9 +12,7 @@
 			Name = "Buffalo Class Gamepad";
 			Meta = "Buffalo Class Gamepad on Windows";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Windows",
 			};
 

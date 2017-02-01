@@ -1,12 +1,13 @@
 ﻿#if UNITY_4_3
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using UnityEngine;
+
+
 namespace InControl
 {
-#if UNITY_EDITOR
-	using UnityEditor;
-#endif
-	using UnityEngine;
-
-
 	public class SpaceAttribute : PropertyAttribute
 	{
 		public int space;
@@ -38,5 +39,6 @@ namespace InControl
 	}
 #endif
 }
+
 #endif
 

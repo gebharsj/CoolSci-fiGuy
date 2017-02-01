@@ -1,3 +1,6 @@
+using System;
+using InControl;
+
 namespace InControl
 {
 	//@cond nodoc
@@ -9,9 +12,7 @@ namespace InControl
 			Name = "SteelSeries Free";
 			Meta = "SteelSeries Free on Android";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Android",
 			};
 

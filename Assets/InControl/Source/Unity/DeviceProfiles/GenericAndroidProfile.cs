@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,7 +12,7 @@ namespace InControl
 			Name = "Generic Controller";
 			Meta = "Generic Controller on Android";
 
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Android",
 			};
 

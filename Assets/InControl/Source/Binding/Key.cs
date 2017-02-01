@@ -1,4 +1,8 @@
-﻿namespace InControl
+﻿using UnityEngine;
+using System.Collections;
+
+
+namespace InControl
 {
 	public enum Key : int
 	{
@@ -129,10 +133,6 @@
 		F13,
 		F14,
 		F15,
-
-		// Other
-		AltGr,
-		CapsLock
 
 		// Unity doesn't define/support these. :(
 		// F16,

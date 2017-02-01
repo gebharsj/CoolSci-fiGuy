@@ -1,9 +1,11 @@
-﻿namespace InControl
+﻿using System;
+using System.IO;
+using System.Text;
+using UnityEngine;
+
+
+namespace InControl
 {
-	using System;
-	using System.IO;
-
-
 	/// <summary>
 	/// The abstract base class for all binding sources.
 	/// A binding source can be bound to an action and provides an input source. It essentially
@@ -98,12 +100,12 @@
 		/// <summary>
 		/// Determines whether the specified object is equal to the current BindingSource.
 		/// </summary>
-		/// <param name="obj">The object to compare with the current BindingSource.</param>
+		/// <param name="other">The object to compare with the current BindingSource.</param>
 		/// <returns><c>true</c> if the specified object is equal to the current
 		/// BindingSource; otherwise, <c>false</c>.</returns>
-		public override bool Equals( object obj )
+		public override bool Equals( object other )
 		{
-			return Equals( (BindingSource) obj );
+			return Equals( (BindingSource) other );
 		}
 
 
@@ -118,11 +120,9 @@
 		}
 
 
-		public abstract BindingSourceType BindingSourceType { get; }
-
-
 		#region Internal
 
+		internal abstract BindingSourceType BindingSourceType { get; }
 		internal abstract void Save( BinaryWriter writer );
 		internal abstract void Load( BinaryReader reader );
 		internal PlayerAction BoundTo { get; set; }

@@ -1,9 +1,10 @@
-﻿namespace InControl
+﻿using UnityEngine;
+using System;
+using System.Collections.Generic;
+
+
+namespace InControl
 {
-	using System;
-	using UnityEngine;
-
-
 	public enum TouchSpriteShape : int
 	{
 		Oval,

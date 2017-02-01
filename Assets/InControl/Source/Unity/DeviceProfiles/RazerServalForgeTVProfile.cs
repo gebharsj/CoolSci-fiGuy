@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// @cond nodoc
@@ -9,9 +12,7 @@ namespace InControl
 			Name = "Razer Serval Controller";
 			Meta = "Razer Serval Controller on Razer Forge TV";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Razer Forge"
 			};
 

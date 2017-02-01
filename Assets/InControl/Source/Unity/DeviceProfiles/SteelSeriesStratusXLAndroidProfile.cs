@@ -1,19 +1,20 @@
+using System;
+
 namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
 	public class SteelSeriesStratusXLAndroidProfile : UnityInputDeviceProfile
 	{
-		// WARNING: Couldn't find the back button
+		// WARNING: The DPad doesn't work. I'm very surprised this actually works at all.
+		// https://github.com/pbhogan/InControl/issues/203
 		//
 		public SteelSeriesStratusXLAndroidProfile()
 		{
 			Name = "SteelSeries Stratus XL";
 			Meta = "SteelSeries Stratus XL on Android";
 
-			DeviceClass = InputDeviceClass.Controller;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Android",
 			};
 
@@ -35,37 +36,32 @@ namespace InControl
 				new InputControlMapping {
 					Handle = "X",
 					Target = InputControlType.Action3,
-					Source = Button2
+					Source = Button13
 				},
 				new InputControlMapping {
 					Handle = "Y",
 					Target = InputControlType.Action4,
-					Source = Button3
+					Source = Button2
 				},
 				new InputControlMapping {
 					Handle = "L1",
 					Target = InputControlType.LeftBumper,
-					Source = Button4
+					Source = Button3
 				},
 				new InputControlMapping {
 					Handle = "R1",
 					Target = InputControlType.RightBumper,
+					Source = Button14
+				},
+				new InputControlMapping {
+					Handle = "L2",
+					Target = InputControlType.LeftTrigger,
+					Source = Button4
+				},
+				new InputControlMapping {
+					Handle = "R2",
+					Target = InputControlType.RightTrigger,
 					Source = Button5
-				},
-				new InputControlMapping {
-					Handle = "Left Stick Button",
-					Target = InputControlType.LeftStickButton,
-					Source = Button8
-				},
-				new InputControlMapping {
-					Handle = "Right Stick Button",
-					Target = InputControlType.RightStickButton,
-					Source = Button9
-				},
-				new InputControlMapping {
-					Handle = "Start",
-					Target = InputControlType.Start,
-					Source = Button10
 				}
 			};
 
@@ -79,24 +75,14 @@ namespace InControl
 				RightStickRightMapping( Analog2 ),
 				RightStickUpMapping( Analog3 ),
 				RightStickDownMapping( Analog3 ),
-
-				DPadLeftMapping( Analog4 ),
-				DPadRightMapping( Analog4 ),
-				DPadUpMapping( Analog5 ),
-				DPadDownMapping( Analog5 ),
-
-				new InputControlMapping {
-					Handle = "Left Trigger",
-					Target = InputControlType.LeftTrigger,
-					Source = Analog12
-				},
-				new InputControlMapping {
-					Handle = "Right Trigger",
-					Target = InputControlType.RightTrigger,
-					Source = Analog11
-				}
 			};
+
+			AnalogMappings[2].SourceRange = InputRange.ZeroToOne;
+			AnalogMappings[3].SourceRange = InputRange.ZeroToMinusOne;
+			AnalogMappings[6].SourceRange = InputRange.ZeroToOne;
+			AnalogMappings[7].SourceRange = InputRange.ZeroToMinusOne;
 		}
 	}
 	// @endcond
 }
+

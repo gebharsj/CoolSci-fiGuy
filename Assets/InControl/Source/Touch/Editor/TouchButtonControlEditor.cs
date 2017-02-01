@@ -1,16 +1,18 @@
 ﻿#if UNITY_EDITOR
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEditor;
-
-
-	[CustomEditor( typeof( TouchButtonControl ) )]
+	[CustomEditor(typeof(TouchButtonControl))]
 	public class TouchButtonControlEditor : TouchControlEditor
 	{
 		void OnEnable()
 		{
-			headerTexture = Internal.EditorTextures.TouchButtonHeader;
-		}
+			LoadHeaderImage( "Images/TouchButtonHeader.png" );
+		}		
 	}
 }
 #endif

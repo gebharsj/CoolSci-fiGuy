@@ -4,16 +4,24 @@ using InControl;
 
 public class Shooting : MonoBehaviour
 {
+    public GameObject muzzleFlash;
+    public GameObject bulletHole;
+
+    public float shootingRange = 50f;
+
     InputDevice inputDevice;
     Animator anim;
     Movement movement;
     CustomCamera customCamera;
+    bool shooting;
+    RaycastHit hit;
 
     void Start()
     {
-        anim = GetComponent<Animator>();
-        movement = GetComponent<Movement>();
-        customCamera = transform.FindChild("Main Camera").gameObject.GetComponent<CustomCamera>();
+        anim = GameObject.Find("Player").GetComponent<Animator>();
+        movement = GameObject.Find("Player").GetComponent<Movement>();
+        customCamera = Camera.main.gameObject.GetComponent<CustomCamera>();
+        muzzleFlash.SetActive(false);
     }
 	
 	void Update ()
@@ -27,11 +35,40 @@ public class Shooting : MonoBehaviour
                 //Can not shoot while proned and not aiming.
             }
             else
-            anim.SetBool("IsShooting", true);
+            {
+                if(!shooting)
+                {
+                    shooting = true;
+                    anim.SetBool("IsShooting", true);
+                    StartCoroutine(MuzzleFlash());
+                    StartCoroutine(Shoot());
+                    shooting = false;
+                }
+            }
         }
         else
         {
             anim.SetBool("IsShooting", false);
         }
 	}
+
+    IEnumerator MuzzleFlash()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(.1f);
+        muzzleFlash.SetActive(false);
+    }
+
+    IEnumerator Shoot()
+    {
+        if(Physics.Raycast(transform.position, transform.forward, out hit, shootingRange))
+        {
+            if(hit.transform.tag == "Environment")
+            {
+                Instantiate(bulletHole, hit.point, hit.transform.rotation);
+            }
+        }
+        yield return new WaitForSeconds(.5f);
+    }
+    
 }

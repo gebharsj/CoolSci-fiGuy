@@ -1,13 +1,10 @@
+﻿using System;
+using System.Reflection;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using System;
-	using UnityEngine;
-
-#if NETFX_CORE
-	using System.Reflection;
-#endif
-
-
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
 	public class SingletonPrefabAttribute : Attribute
 	{
@@ -20,9 +17,7 @@ namespace InControl
 	}
 
 
-	public abstract class SingletonMonoBehavior<T, P> : MonoBehaviour
-		where T : MonoBehaviour
-		where P : MonoBehaviour
+	public abstract class SingletonMonoBehavior<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		private static T instance;
 		private static bool hasInstance;
@@ -40,28 +35,9 @@ namespace InControl
 
 		static void CreateInstance()
 		{
-			GameObject gameObject = null;
-
-			if (typeof( P ) == typeof( MonoBehaviour ))
-			{
-				gameObject = new GameObject();
-				gameObject.name = typeof( T ).Name;
-			}
-			else
-			{
-				var component = GameObject.FindObjectOfType<P>();
-				if (component)
-				{
-					gameObject = component.gameObject;
-				}
-				else
-				{
-					Debug.LogError( "Could not find object with required component " + typeof( P ).Name );
-					return;
-				}
-			}
-
-			Debug.Log( "Creating instance of singleton component " + typeof( T ).Name );
+			var gameObject = new GameObject();
+			gameObject.name = typeof(T).ToString();
+			Debug.Log( "Creating instance of singleton: " + gameObject.name );
 			instance = gameObject.AddComponent<T>();
 			hasInstance = true;
 		}
@@ -76,7 +52,7 @@ namespace InControl
 					return instance;
 				}
 
-				var type = typeof( T );
+				var type = typeof(T);
 				var objects = FindObjectsOfType<T>();
 
 				if (objects.Length > 0)
@@ -87,7 +63,7 @@ namespace InControl
 					if (objects.Length > 1)
 					{
 						Debug.LogWarning( "Multiple instances of singleton " + type + " found; destroying all but the first." );
-						for (var i = 1; i < objects.Length; i++)
+						for (int i = 1; i < objects.Length; i++)
 						{
 							DestroyImmediate( objects[i].gameObject );
 						}
@@ -96,11 +72,11 @@ namespace InControl
 					return instance;
 				}
 
-#if NETFX_CORE
+				#if NETFX_CORE
 				var attribute = type.GetTypeInfo().GetCustomAttribute<SingletonPrefabAttribute>();
-#else
-				var attribute = Attribute.GetCustomAttribute( type, typeof( SingletonPrefabAttribute ) ) as SingletonPrefabAttribute;
-#endif
+				#else
+				var attribute = Attribute.GetCustomAttribute( type, typeof(SingletonPrefabAttribute) ) as SingletonPrefabAttribute;
+				#endif
 
 				if (attribute == null)
 				{
@@ -134,14 +110,14 @@ namespace InControl
 		}
 
 
-		protected bool EnforceSingleton()
+		static void EnforceSingleton()
 		{
 			lock (lockObject)
 			{
 				if (hasInstance)
 				{
 					var objects = FindObjectsOfType<T>();
-					for (var i = 0; i < objects.Length; i++)
+					for (int i = 0; i < objects.Length; i++)
 					{
 						if (objects[i].GetInstanceID() != instance.GetInstanceID())
 						{
@@ -150,21 +126,13 @@ namespace InControl
 					}
 				}
 			}
-			return GetInstanceID() == Instance.GetInstanceID();
 		}
 
 
-		protected bool EnforceSingletonComponent()
+		protected bool SetupSingleton()
 		{
-			lock (lockObject)
-			{
-				if (hasInstance && GetInstanceID() != instance.GetInstanceID())
-				{
-					DestroyImmediate( this );
-					return false;
-				}
-			}
-			return true;
+			EnforceSingleton();
+			return GetInstanceID() == Instance.GetInstanceID();
 		}
 
 

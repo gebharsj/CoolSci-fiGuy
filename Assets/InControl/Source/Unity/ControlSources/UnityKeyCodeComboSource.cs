@@ -1,8 +1,9 @@
+using System;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEngine;
-
-
 	public class UnityKeyCodeComboSource : InputControlSource
 	{
 		public KeyCode[] KeyCodeList;
@@ -27,7 +28,7 @@ namespace InControl
 
 		public bool GetState( InputDevice inputDevice )
 		{
-			for (var i = 0; i < KeyCodeList.Length; i++)
+			for (int i = 0; i < KeyCodeList.Length; i++)
 			{
 				if (!Input.GetKey( KeyCodeList[i] ))
 				{

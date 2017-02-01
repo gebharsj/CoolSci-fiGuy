@@ -1,12 +1,11 @@
+using System;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEngine;
-
-
 	public class TwoAxisInputControl : IInputControl
 	{
-		public static readonly TwoAxisInputControl Null = new TwoAxisInputControl();
-
 		public float X { get; protected set; }
 		public float Y { get; protected set; }
 
@@ -17,10 +16,8 @@ namespace InControl
 
 		public ulong UpdateTick { get; protected set; }
 
-		float sensitivity = 1.0f;
-		float lowerDeadZone = 0.0f;
-		float upperDeadZone = 1.0f;
-		float stateThreshold = 0.0f;
+		public float LowerDeadZone = 0.0f;
+		public float UpperDeadZone = 1.0f;
 
 		public bool Raw;
 
@@ -52,9 +49,6 @@ namespace InControl
 			lastValue = Vector2.zero;
 			thisState = false;
 			thisValue = Vector2.zero;
-
-			X = 0.0f;
-			Y = 0.0f;
 
 			clearInputState = true;
 		}
@@ -114,74 +108,21 @@ namespace InControl
 		}
 
 
-		public float Sensitivity
-		{
-			get
-			{
-				return sensitivity;
-			}
-
-			set
-			{
-				sensitivity = Mathf.Clamp01( value );
-				Left.Sensitivity = sensitivity;
-				Right.Sensitivity = sensitivity;
-				Up.Sensitivity = sensitivity;
-				Down.Sensitivity = sensitivity;
-			}
-		}
-
-
+		float stateThreshold = 0.0f;
 		public float StateThreshold
 		{
+			set
+			{
+				stateThreshold = value;
+				Left.StateThreshold = value;
+				Right.StateThreshold = value;
+				Up.StateThreshold = value;
+				Down.StateThreshold = value;
+			}
+
 			get
 			{
 				return stateThreshold;
-			}
-
-			set
-			{
-				stateThreshold = Mathf.Clamp01( value );
-				Left.StateThreshold = stateThreshold;
-				Right.StateThreshold = stateThreshold;
-				Up.StateThreshold = stateThreshold;
-				Down.StateThreshold = stateThreshold;
-			}
-		}
-
-
-		public float LowerDeadZone
-		{
-			get
-			{
-				return lowerDeadZone;
-			}
-
-			set
-			{
-				lowerDeadZone = Mathf.Clamp01( value );
-				Left.LowerDeadZone = lowerDeadZone;
-				Right.LowerDeadZone = lowerDeadZone;
-				Up.LowerDeadZone = lowerDeadZone;
-				Down.LowerDeadZone = lowerDeadZone;
-			}
-		}
-
-
-		public float UpperDeadZone
-		{
-			get
-			{
-				return upperDeadZone;
-			}
-
-			set
-			{
-				upperDeadZone = Mathf.Clamp01( value );
-				Left.UpperDeadZone = upperDeadZone;
-				Right.UpperDeadZone = upperDeadZone;
-				Up.UpperDeadZone = upperDeadZone;
-				Down.UpperDeadZone = upperDeadZone;
 			}
 		}
 
@@ -199,19 +140,19 @@ namespace InControl
 
 
 		public Vector2 Value
-		{
+		{ 
 			get { return thisValue; }
 		}
 
 
 		public Vector2 LastValue
-		{
+		{ 
 			get { return lastValue; }
 		}
 
 
 		public Vector2 Vector
-		{
+		{ 
 			get { return thisValue; }
 		}
 

@@ -1,8 +1,8 @@
-﻿namespace InterfaceMovement
+﻿using UnityEngine;
+
+
+namespace InterfaceMovement
 {
-	using UnityEngine;
-
-
 	public class ButtonFocus : MonoBehaviour
 	{
 		void Update()

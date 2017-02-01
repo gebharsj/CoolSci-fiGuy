@@ -1,8 +1,10 @@
-﻿namespace InControl
-{
-	using System.IO;
-	using UnityEngine;
+﻿using System;
+using System.IO;
+using UnityEngine;
 
+
+namespace InControl
+{
 
 	public class UnknownDeviceBindingSource : BindingSource
 	{
@@ -141,7 +143,7 @@
 		}
 
 
-		public override BindingSourceType BindingSourceType
+		internal override BindingSourceType BindingSourceType
 		{
 			get
 			{

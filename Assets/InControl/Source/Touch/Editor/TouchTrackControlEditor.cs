@@ -1,15 +1,17 @@
 ﻿#if UNITY_EDITOR
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEditor;
-
-
-	[CustomEditor( typeof( TouchTrackControl ) )]
+	[CustomEditor(typeof(TouchTrackControl))]
 	public class TouchTrackControlEditor : TouchControlEditor
 	{
 		void OnEnable()
 		{
-			headerTexture = Internal.EditorTextures.TouchTrackHeader;
+			LoadHeaderImage( "Images/TouchTrackHeader.png" );
 		}
 	}
 }

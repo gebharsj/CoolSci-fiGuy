@@ -1,8 +1,9 @@
-﻿namespace InControl
+﻿using System;
+using System.Threading;
+
+
+namespace InControl
 {
-	using System;
-
-
 	internal class RingBuffer<T>
 	{
 		int size;

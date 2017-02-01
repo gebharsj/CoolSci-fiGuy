@@ -1,8 +1,9 @@
+using System;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEngine;
-
-
 	public class UnityMouseAxisSource : InputControlSource
 	{
 		public string MouseAxisQuery;

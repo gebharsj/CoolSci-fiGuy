@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 #if UNITY_ANDROID && INCONTROL_OUYA && !UNITY_EDITOR
 using tv.ouya.console.api;
@@ -13,7 +17,7 @@ namespace InControl
 
 		public OuyaEverywhereDeviceManager()
 		{
-			for (var deviceIndex = 0; deviceIndex < 4; deviceIndex++)
+			for (int deviceIndex = 0; deviceIndex < 4; deviceIndex++)
 			{
 				devices.Add( new OuyaEverywhereDevice( deviceIndex ) );
 			}
@@ -22,7 +26,7 @@ namespace InControl
 
 		public override void Update( ulong updateTick, float deltaTime )
 		{
-			for (var deviceIndex = 0; deviceIndex < 4; deviceIndex++)
+			for (int deviceIndex = 0; deviceIndex < 4; deviceIndex++)
 			{
 				var device = devices[deviceIndex] as OuyaEverywhereDevice;
 

@@ -1,3 +1,6 @@
+using System;
+
+
 namespace InControl
 {
 	// This profile works for connection over USB ONLY.
@@ -12,21 +15,15 @@ namespace InControl
 	{
 		public PlayStation4WinProfile()
 		{
-			string RegistrationMark = "\u00AE";
-
 			Name = "PlayStation 4 Controller";
 			Meta = "PlayStation 4 Controller on Windows";
 
-			DeviceClass = InputDeviceClass.Controller;
-			DeviceStyle = InputDeviceStyle.PlayStation4;
-
-			IncludePlatforms = new[] {
+			SupportedPlatforms = new[] {
 				"Windows"
 			};
 
 			JoystickNames = new[] {
-				"Wireless Controller",
-				"DUALSHOCK" + RegistrationMark + "4 USB Wireless Adaptor"
+				"Wireless Controller"
 			};
 
 			ButtonMappings = new[] {
@@ -87,7 +84,7 @@ namespace InControl
 				},
 				new InputControlMapping {
 					Handle = "TouchPad Button",
-					Target = InputControlType.TouchPadButton,
+					Target = InputControlType.TouchPadTap,
 					Source = Button13
 				},
 			};

@@ -1,15 +1,17 @@
 ﻿#if UNITY_EDITOR
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+
 namespace InControl
 {
-	using UnityEditor;
-
-
-	[CustomEditor( typeof( TouchSwipeControl ) )]
+	[CustomEditor(typeof(TouchSwipeControl))]
 	public class TouchSwipeControlEditor : TouchControlEditor
 	{
 		void OnEnable()
 		{
-			headerTexture = Internal.EditorTextures.TouchSwipeHeader;
+			LoadHeaderImage( "Images/TouchSwipeHeader.png" );
 		}
 	}
 }

@@ -1,9 +1,10 @@
+using System;
+using UnityEngine;
+using InControl;
+
+
 namespace BasicExample
 {
-	using InControl;
-	using UnityEngine;
-
-
 	public class BasicExample : MonoBehaviour
 	{
 		void Update()

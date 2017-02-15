@@ -21,8 +21,8 @@ public class Movement : MonoBehaviour
     bool isSprinting;
     bool isCrouching;
     bool isMoving;
-    [HideInInspector]
-    public bool isProne;
+  //  [HideInInspector]
+  //  public bool isProne;
 
     Animator anim;
     Rigidbody rb;
@@ -77,14 +77,14 @@ public class Movement : MonoBehaviour
                 anim.SetBool("IsSprinting", false);
             }
 
-            if (inputDevice.RightStickButton.WasRepeated)
-            {
-                if (!isProne)
-                {
-                    isProne = true;
-                    anim.SetBool("IsProne", true);
-                }
-            }
+            //if (inputDevice.RightStickButton.WasRepeated)
+            //{
+            //    if (!isProne)
+            //    {
+            //        isProne = true;
+            //        anim.SetBool("IsProne", true);
+            //    }
+            //}
             if (inputDevice.RightStickButton.WasPressed)
             {
                 if(!isCrouching)
@@ -94,21 +94,21 @@ public class Movement : MonoBehaviour
                 }
                 else
                 {
-                    isProne = false;
+                  //  isProne = false;
                     isCrouching = false;
-                    anim.SetBool("IsProne", false);
+                  //  anim.SetBool("IsProne", false);
                     anim.SetBool("IsCrouching", false);
                 }
             }
 
-            if (isProne && isMoving)
-            {
-                anim.SetBool("IsProneMoving", true);
-            }
-            else
-            {
-                anim.SetBool("IsProneMoving", false);
-            }
+            //if (isProne && isMoving)
+            //{
+            //    anim.SetBool("IsProneMoving", true);
+            //}
+            //else
+            //{
+            //    anim.SetBool("IsProneMoving", false);
+            //}
 
             if (isCrouching && isMoving)
             {
@@ -120,7 +120,7 @@ public class Movement : MonoBehaviour
             }
         }
 
-        if (inputDevice.Action1.WasPressed && isGrounded && !isProne)
+        if (inputDevice.Action1.WasPressed && isGrounded)   // && !isProne
         {
             anim.SetBool("isJumping", true);
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
@@ -147,8 +147,8 @@ public class Movement : MonoBehaviour
         else
             m_speed = speed;
 
-        if(!isProne)
-        {
+      //  if(!isProne)
+      //  {
             if (!isCrouching)
             {
                 if (!isSprinting)
@@ -170,22 +170,22 @@ public class Movement : MonoBehaviour
                 transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * .5f, 0f, vert * Time.deltaTime * m_speed * .5f));
                 transform.Rotate(new Vector3(0, hori2 * rotationSpeed * .5f * Time.deltaTime, 0));
             }
-        }
-        else
-        {
-            if(customCamera.isAiming)
-            {
-                //You can't walk while aiming in prone.
-                anim.SetFloat("Horizontal", 0);
-                anim.SetFloat("Vertical", 0);
-            }
-            else
-            {
-                //Proning
-                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * .25f, 0f, vert * Time.deltaTime * m_speed * .25f));
-                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * .25f * Time.deltaTime, 0));
-            }
-        }
+     //   }
+        //else
+        //{
+        //    if(customCamera.isAiming)
+        //    {
+        //        //You can't walk while aiming in prone.
+        //        anim.SetFloat("Horizontal", 0);
+        //        anim.SetFloat("Vertical", 0);
+        //    }
+        //    else
+        //    {
+        //        //Proning
+        //        transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * .25f, 0f, vert * Time.deltaTime * m_speed * .25f));
+        //        transform.Rotate(new Vector3(0, hori2 * rotationSpeed * .25f * Time.deltaTime, 0));
+        //    }
+        //}
     }
 
     void CheckGroundedStatus()

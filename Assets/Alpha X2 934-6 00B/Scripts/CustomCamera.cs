@@ -13,10 +13,10 @@ public class CustomCamera : MonoBehaviour
     [Tooltip("Position of the camera when you are in aim mode.")]
     public Vector3 firstAimPosition;
 
-    [Tooltip("Position of the camera when not in aim mode.")]
-    public Vector3 thirdStartPosition;
-    [Tooltip("Position of the camera when you are in aim mode.")]
-    public Vector3 thirdAimPosition;
+   // [Tooltip("Position of the camera when not in aim mode.")]
+  //  public Vector3 thirdStartPosition;
+  //  [Tooltip("Position of the camera when you are in aim mode.")]
+   // public Vector3 thirdAimPosition;
 
     Animator anim;
 
@@ -25,13 +25,13 @@ public class CustomCamera : MonoBehaviour
     [HideInInspector]
     public bool isAiming;
 
-    public enum CameraView
-    {
-        FirstPerson,
-        ThirdPerson,
-    }
+    //public enum CameraView
+    //{
+    //    FirstPerson,
+    //    ThirdPerson,
+    //}
 
-    public CameraView cameraView = CameraView.ThirdPerson;
+   // public CameraView cameraView = CameraView.ThirdPerson;
     InputDevice inputDevice;
     
 	void Start ()
@@ -44,28 +44,28 @@ public class CustomCamera : MonoBehaviour
         inputDevice = InputManager.ActiveDevice;
         hori2 = inputDevice.RightStickX;
         
-        if(inputDevice.DPadUp.WasPressed)
-        {
-            SwitchCameraView();
-        }
-        switch (cameraView)
-        {
-            case CameraView.ThirdPerson:
-                if (inputDevice.LeftTrigger.IsPressed)
-                {
-                    isAiming = true;
-                    anim.SetBool("IsAiming", true);
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, thirdAimPosition, aimSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    isAiming = false;
-                    anim.SetBool("IsAiming", false);
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, thirdStartPosition, aimSpeed * Time.deltaTime); ;
-                }
-                break;
+        //if(inputDevice.DPadUp.WasPressed)
+        //{
+        //    SwitchCameraView();
+        //}
+       // switch (cameraView)
+     //   {
+            //case CameraView.ThirdPerson:
+            //    if (inputDevice.LeftTrigger.IsPressed)
+            //    {
+            //        isAiming = true;
+            //        anim.SetBool("IsAiming", true);
+            //        transform.localPosition = Vector3.Lerp(transform.localPosition, thirdAimPosition, aimSpeed * Time.deltaTime);
+            //    }
+            //    else
+            //    {
+            //        isAiming = false;
+            //        anim.SetBool("IsAiming", false);
+            //        transform.localPosition = Vector3.Lerp(transform.localPosition, thirdStartPosition, aimSpeed * Time.deltaTime); ;
+            //    }
+             //   break;
 
-            case CameraView.FirstPerson:
+           // case CameraView.FirstPerson:
                 if (inputDevice.LeftTrigger.IsPressed)
                 {
                     isAiming = true;
@@ -78,15 +78,15 @@ public class CustomCamera : MonoBehaviour
                     anim.SetBool("IsAiming", false);
                     transform.localPosition = Vector3.Lerp(transform.localPosition, firstStartPosition, aimSpeed * Time.deltaTime); ;
                 }
-                break;
+               // break;
         }
     }
 
-    public void SwitchCameraView()
-    {
-        if(cameraView == CameraView.ThirdPerson)
-            cameraView = CameraView.FirstPerson;
-        else
-            cameraView = CameraView.ThirdPerson;
-    }
-}
+    //public void SwitchCameraView()
+    //{
+    //    if(cameraView == CameraView.ThirdPerson)
+    //        cameraView = CameraView.FirstPerson;
+    //    else
+    //        cameraView = CameraView.ThirdPerson;
+    //}
+

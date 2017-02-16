@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using TrueSync;
 
-public class Shooting : MonoBehaviour
+public class Shooting : TrueSyncBehaviour
 {
     public GameObject muzzleFlash;
     public GameObject bulletHole;
@@ -12,6 +13,7 @@ public class Shooting : MonoBehaviour
     public float magazineSize = 60f;
     public float reloadTime = 2f;
 
+    GameObject player;
     float ammo;
     float lastShot;
 
@@ -25,24 +27,42 @@ public class Shooting : MonoBehaviour
     CustomCamera customCamera;
     RaycastHit hit;
 
-    void Start()
+    public override void  OnSyncedStart()
     {
-        anim = GameObject.Find("Player").GetComponent<Animator>();
-        movement = GameObject.Find("Player").GetComponent<Movement>();
+        foreach (GameObject _player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            if(_player.GetComponent<PhotonView>().isMine)
+            {
+                player = _player;
+            }
+        }
+        anim = player.GetComponent<Animator>();
+        movement = player.GetComponent<Movement>();
         customCamera = Camera.main.gameObject.GetComponent<CustomCamera>();
         muzzleFlash.SetActive(false);
         ammo = magazineSize;
     }
-	
-	void Update ()
+
+    public override void OnSyncedInput()
     {
         inputDevice = InputManager.ActiveDevice;
 
-        if(inputDevice.Action3.WasPressed)
+        bool reload = inputDevice.Action2.WasPressed;
+        bool shot = inputDevice.RightTrigger.IsPressed;
+
+        TrueSyncInput.SetBool(4, reload);
+        TrueSyncInput.SetBool(5, shot);
+    }
+    public override void OnSyncedUpdate ()
+    {
+        bool reload = TrueSyncInput.GetBool(4);
+        bool shot = TrueSyncInput.GetBool(5);
+
+        if(reload)
         {
             StartCoroutine(Reload());
         }
-        if(inputDevice.RightTrigger.IsPressed)
+        if(shot)
         {
             //if(movement.isProne && !customCamera.isAiming)
             //{
@@ -81,7 +101,7 @@ public class Shooting : MonoBehaviour
                 {
                     hitObject = true;
                     ammo--;
-                    GameObject clone = Instantiate(bulletHole, hit.point, hit.transform.rotation) as GameObject;
+                    GameObject clone = TrueSyncManager.Instantiate(bulletHole, hit.point, hit.transform.rotation) as GameObject;
                     clone.transform.SetParent(hit.transform);
                     hit.transform.GetComponent<Health>().TookDamage();
                 }

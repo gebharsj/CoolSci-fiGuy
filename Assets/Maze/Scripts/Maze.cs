@@ -75,7 +75,7 @@ public class Maze : MonoBehaviour {
         wallContainer.name = "MazeWalls";
         totalCells = xSize * ySize;        
         lastCells = new List<int>();
-        initialPos = new Vector3((-xSize/2) + wallLength/2, 0f, (-ySize/2) + wallLength/2);
+        initialPos = new Vector3((-xSize/2) + wallLength/2, wallPrefab.transform.localScale.y * .5f, (-ySize/2) + wallLength/2);
         Vector3 myPos = initialPos;
         GameObject clone;
 
@@ -84,7 +84,7 @@ public class Maze : MonoBehaviour {
         {
             for(int j = 0; j <= xSize; j++)
             {
-                myPos = new Vector3(initialPos.x + (j * wallLength) - wallLength / 2, 0f, initialPos.z + (i * wallLength) - wallLength / 2);
+                myPos = new Vector3(initialPos.x + (j * wallLength) - wallLength / 2, wallPrefab.transform.localScale.y * .5f, initialPos.z + (i * wallLength) - wallLength / 2);
                 clone = Instantiate(wallPrefab, myPos, Quaternion.identity) as GameObject;
                 clone.transform.parent = wallContainer.transform;
                 clone.name = "Wall";
@@ -96,9 +96,10 @@ public class Maze : MonoBehaviour {
         {
             for (int j = 0; j < xSize; j++)
             {
-                myPos = new Vector3(initialPos.x + (j * wallLength), 0f, initialPos.z + (i * wallLength) - wallLength);
+                myPos = new Vector3(initialPos.x + (j * wallLength), wallPrefab.transform.localScale.y *.5f, initialPos.z + (i * wallLength) - wallLength);
                 clone = Instantiate(wallPrefab, myPos, Quaternion.Euler(0, 90, 0)) as GameObject;
                 clone.transform.parent = wallContainer.transform;
+                clone.transform.position = new Vector3(clone.transform.position.x, clone.transform.localScale.y * .5f, clone.transform.position.z);
                 clone.name = "Wall";
             }
         }
@@ -174,7 +175,6 @@ public class Maze : MonoBehaviour {
                 startedBuilding = true;
             }
         }
-
         Debug.Log("Finished");
     }
 

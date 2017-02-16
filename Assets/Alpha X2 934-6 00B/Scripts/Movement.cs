@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using TrueSync;
 
-public class Movement : MonoBehaviour
+public class Movement : TrueSyncBehaviour
 {
     public float speed = 10f;
     public float jumpForce = 10f;
@@ -30,7 +31,7 @@ public class Movement : MonoBehaviour
     InputDevice inputDevice;
     CustomCamera customCamera;
 
-	void Start ()
+	public override void  OnSyncedStart ()
     {
         customCamera = transform.FindChild("Main Camera").gameObject.GetComponent<CustomCamera>();
         anim = GetComponent<Animator>();
@@ -38,14 +39,34 @@ public class Movement : MonoBehaviour
         originalGroundCheckDistance = groundCheckDistance;
         m_speed = speed;
 	}
-	
-	void Update ()
+
+    public override void OnSyncedInput()
     {
         inputDevice = InputManager.ActiveDevice;
 
-        hori = inputDevice.LeftStickX;
-        hori2 = inputDevice.RightStickX;
-        vert = inputDevice.LeftStickY;
+        float hori = inputDevice.LeftStickX;
+        float hori2 = inputDevice.RightStickX;
+        float vert = inputDevice.LeftStickY;
+        bool sprint = inputDevice.LeftStickButton.IsPressed;
+        bool crouch = inputDevice.RightStickButton.WasPressed;
+        bool jump = inputDevice.Action1.WasPressed;
+
+        TrueSyncInput.SetFP(0, hori);
+        TrueSyncInput.SetFP(1, hori2);
+        TrueSyncInput.SetFP(2, vert);
+        TrueSyncInput.SetBool(6, sprint);
+        TrueSyncInput.SetBool(7, crouch);
+        TrueSyncInput.SetBool(8, jump);
+    }
+
+    public override void OnSyncedUpdate ()
+    {
+        FP hori = TrueSyncInput.GetFP(0);
+        FP hori2 = TrueSyncInput.GetFP(1);
+        FP vert = TrueSyncInput.GetFP(2);
+        bool sprint = TrueSyncInput.GetBool(6);
+        bool crouch = TrueSyncInput.GetBool(7);
+        bool jump = TrueSyncInput.GetBool(8);
 
         if (hori != 0 || vert != 0)
         {
@@ -62,11 +83,11 @@ public class Movement : MonoBehaviour
 
         if (isGrounded)
         {
-            anim.SetFloat("Horizontal", hori);
-            anim.SetFloat("Vertical", vert);
-            anim.SetFloat("Horizontal2", hori2);
+            anim.SetFloat("Horizontal", (float)hori);
+            anim.SetFloat("Vertical", (float)vert);
+            anim.SetFloat("Horizontal2", (float)hori2);
             
-            if(inputDevice.LeftStickButton.IsPressed)
+            if(sprint)
             {
                 isSprinting = true;
                 anim.SetBool("IsSprinting", true);
@@ -85,7 +106,7 @@ public class Movement : MonoBehaviour
             //        anim.SetBool("IsProne", true);
             //    }
             //}
-            if (inputDevice.RightStickButton.WasPressed)
+            if (crouch)
             {
                 if(!isCrouching)
                 {
@@ -120,7 +141,7 @@ public class Movement : MonoBehaviour
             }
         }
 
-        if (inputDevice.Action1.WasPressed && isGrounded) // && !isProne
+        if (jump && isGrounded) // && !isProne
         {
             anim.SetBool("isJumping", true);
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
@@ -154,21 +175,21 @@ public class Movement : MonoBehaviour
                 if (!isSprinting)
                 {
                     //Walking / Running
-                    transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
-                    transform.Rotate(new Vector3(0, hori2 * rotationSpeed * Time.deltaTime, 0));
+                    transform.Translate(new Vector3((float)hori * Time.deltaTime * m_speed, 0f, (float)vert * Time.deltaTime * m_speed));
+                    transform.Rotate(new Vector3(0, (float)hori2 * rotationSpeed * Time.deltaTime, 0));
                 }
                 else
                 {
-                    //Sprinting
-                    transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 1.5f, 0f, vert * Time.deltaTime * m_speed * 1.5f));
-                    transform.Rotate(new Vector3(0, hori2 * rotationSpeed * 1.5f * Time.deltaTime, 0));
+                //Sprinting
+                    transform.Translate(new Vector3((float)hori * Time.deltaTime * m_speed * 1.5f, 0f, (float)vert * Time.deltaTime * m_speed * 1.5f));
+                    transform.Rotate(new Vector3(0, (float)hori2 * rotationSpeed * 1.5f * Time.deltaTime, 0));
                 }
             }
             else
             {
-                //Crouching
-                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * .5f, 0f, vert * Time.deltaTime * m_speed * .5f));
-                transform.Rotate(new Vector3(0, hori2 * rotationSpeed * .5f * Time.deltaTime, 0));
+            //Crouching
+                transform.Translate(new Vector3((float)hori * Time.deltaTime * m_speed * .5f, 0f, (float)vert * Time.deltaTime * m_speed * .5f));
+                transform.Rotate(new Vector3(0, (float)hori2 * rotationSpeed * .5f * Time.deltaTime, 0));
             }
         //}
         //else

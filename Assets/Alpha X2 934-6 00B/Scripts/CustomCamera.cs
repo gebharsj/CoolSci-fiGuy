@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using TrueSync;
 
-public class CustomCamera : MonoBehaviour
+public class CustomCamera : TrueSyncBehaviour
 {
-    public GameObject player;
+    GameObject player;
     public float aimSpeed = 10;
     public float rotationSpeed = 100;
 
@@ -21,7 +22,6 @@ public class CustomCamera : MonoBehaviour
     Animator anim;
 
     float hori2;
-    float vert2;
     Vector3 myPosition;
     [HideInInspector]
     public bool isAiming;
@@ -35,16 +35,23 @@ public class CustomCamera : MonoBehaviour
     //public CameraView cameraView = CameraView.ThirdPerson;
     InputDevice inputDevice;
     
-	void Start ()
+	public override void  OnSyncedStart ()
     {
-        player = GameObject.Find("Player");
+        player = transform.parent.gameObject;
         anim = player.GetComponent<Animator>();
 	}
-	void Update ()
+
+    public override void OnSyncedInput()
     {
         inputDevice = InputManager.ActiveDevice;
-        hori2 = inputDevice.RightStickX;
 
+        bool aim = inputDevice.LeftTrigger.IsPressed;
+        TrueSyncInput.SetBool(3, aim);
+    }
+    public override void  OnSyncedUpdate ()
+    {
+        FP hori2 = TrueSyncInput.GetFP(1);
+        bool aim = TrueSyncInput.GetBool(3);
         //if(inputDevice.DPadUp.WasPressed)
         //{
         //    SwitchCameraView();
@@ -52,7 +59,7 @@ public class CustomCamera : MonoBehaviour
         //switch (cameraView)
         //{
         //    case CameraView.ThirdPerson:
-        if (inputDevice.LeftTrigger.IsPressed)
+        if (aim)
                 {
                     isAiming = true;
                     anim.SetBool("IsAiming", true);
@@ -69,7 +76,7 @@ public class CustomCamera : MonoBehaviour
        
         //    transform.Rotate(new Vector3(-vert2 * (rotationSpeed * 2) * Time.deltaTime, 0, 0));
 
-        anim.SetFloat("Vertical2", (hori2));
+        anim.SetFloat("Vertical2", ((float)hori2));
         //break;
 
         //case CameraView.FirstPerson:

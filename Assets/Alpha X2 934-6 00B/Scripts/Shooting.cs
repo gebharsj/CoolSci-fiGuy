@@ -44,12 +44,12 @@ public class Shooting : MonoBehaviour
         }
         if(inputDevice.RightTrigger.IsPressed)
         {
-            if(movement.isProne && !customCamera.isAiming)
-            {
-                //Can not shoot while proned and not aiming.
-            }
-            else
-            {
+            //if(movement.isProne && !customCamera.isAiming)
+            //{
+            //    //Can not shoot while proned and not aiming.
+            //}
+            //else
+            //{
                 if(!shooting && Time.time > lastShot + fireFreq && ammo > 0 && !reloading)
                 {
                     shooting = true;
@@ -58,7 +58,7 @@ public class Shooting : MonoBehaviour
                     StartCoroutine(Shoot());
                     shooting = false;
                 }
-            }
+          //  }
         }
         else
         {
@@ -71,8 +71,21 @@ public class Shooting : MonoBehaviour
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(.01f);
         muzzleFlash.SetActive(false);
-        if (Physics.Raycast(transform.position, transform.forward, out hit, shootingRange))
+        if (Physics.Raycast(transform.position, transform.right, out hit, shootingRange))
         {
+            print("Happens");
+            if(hit.transform.tag == "Player")
+            {
+                print("HIT ENEMY");
+                if (!hitObject)
+                {
+                    hitObject = true;
+                    ammo--;
+                    GameObject clone = Instantiate(bulletHole, hit.point, hit.transform.rotation) as GameObject;
+                    clone.transform.SetParent(hit.transform);
+                    hit.transform.GetComponent<Health>().TookDamage();
+                }
+            }
             if(hit.transform.tag == "Environment")
             {
                 if(!hitObject)

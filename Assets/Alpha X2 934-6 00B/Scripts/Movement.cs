@@ -35,13 +35,16 @@ public class Movement : TrueSyncBehaviour
     {
         if (TrueSyncManager.LocalPlayer == owner)
         {
+            print(TrueSyncManager.LocalPlayer);
             transform.FindChild("Main Camera").gameObject.SetActive(true);
-
             customCamera = transform.FindChild("Main Camera").gameObject.GetComponent<CustomCamera>();
 
+            anim = GetComponent<Animator>();
+            rb = GetComponent<Rigidbody>();
         }
-        anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
+        else
+            print("asklfja");
+
         originalGroundCheckDistance = groundCheckDistance;
         m_speed = speed;
 	}

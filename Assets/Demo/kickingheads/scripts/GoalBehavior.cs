@@ -36,11 +36,6 @@ public class GoalBehavior : TrueSyncBehaviour {
         scoreText.text = "0";
     }
 
-    public override void OnSyncedStart() {
-        // Adds to TrueSync's tracking system
-        StateTracker.AddTracking(this);
-    }
-
     /**
     * @brief When a ball hits this goal the score is updated and a 'GoalScored' is triggered.
     **/

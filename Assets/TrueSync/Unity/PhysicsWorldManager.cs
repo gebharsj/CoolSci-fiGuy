@@ -152,7 +152,7 @@ namespace TrueSync {
             TSVector origin = ray.origin;
             TSVector direction = ray.direction;
 
-            if (PhysicsManager.instance.Raycast(origin, direction, callback, out hitBody, out hitNormal, out hitFraction)) {
+            if (Raycast(origin, direction, callback, out hitBody, out hitNormal, out hitFraction)) {
                 if (hitFraction <= maxDistance) {
                     GameObject other = PhysicsManager.instance.GetGameObject(hitBody);
                     TSRigidBody bodyComponent = other.GetComponent<TSRigidBody>();
@@ -162,7 +162,7 @@ namespace TrueSync {
                 }
             } else {
                 direction *= maxDistance;
-                if (PhysicsManager.instance.Raycast(origin, direction, callback, out hitBody, out hitNormal, out hitFraction)) {
+                if (Raycast(origin, direction, callback, out hitBody, out hitNormal, out hitFraction)) {
                     GameObject other = PhysicsManager.instance.GetGameObject(hitBody);
                     TSRigidBody bodyComponent = other.GetComponent<TSRigidBody>();
                     TSCollider colliderComponent = other.GetComponent<TSCollider>();

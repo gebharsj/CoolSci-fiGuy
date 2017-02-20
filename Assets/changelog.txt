@@ -1,6 +1,29 @@
+# 0.1.0.9
+- Fixed TSPolygonCollider2D to allow concave shapes
+- Fixed string length limitation (256 bytes) on TrueSyncInput
+- Fixed issue that set position to zero when FreezePosition is marked on TSRigidBody
+- Fixed a bug with replay recording
+- Improved callback's call made by TrueSyncManager
+- Improved performance of FP operations (addition / subtraction / multiplication)
+- Improved StateTracker performance
+- Improvements on memory allocation
+- Added "SetByteArray", "HasByteArray" and "GetByteArray" to TrueSyncInput
+- Added "HingeJoint.Create" to allow creation of simple hinge joints between two 3D bodies
+- Added "TSPhysics2D.Raycast" and "TSPhysics2D.RaycastAll" methods
+- Added "TrueSyncManager.CleanUp" method to clean up internal/static references
+
 # 0.1.0.8
 - Fixed TrueSyncManager.Time value in rollback mode
+- Fixed TSRigidBody.isKinematic when it was set back to false
+- Fixed TSRigibody2D.mass value after a change in "isKinematic"
+- Adjusted drag calculation to behave like Unity's
+- Improvements on memory allocation
+- Added "LookRotation", "Slerp" and "RotateTowards" methods to TSQuaternion
+- Added "TSFriction" and "TSRestitution" to IBody interface
+- Added "ClampMagnitude" to TSVector and TSVector2
+- Added "drag" and "angularDrag" to TSRigibody and TSRigibody2D
 - Added "layerMask" parameter to TSPhysics2D.OverlapXYZ and TSPhysics2D.CastXYZ methods
+- Added "OnSyncedStartLocalPlayer" callback to TrueSyncBehaviour
 - Added "SetBool", "HasBool", "GetBool", "SetTSVector2" and "GetTSVector2" methods to TrueSyncInput
 - Added "GetPlayerInput" to TrueSyncInput to get an InputData from a specific player
 - Added overloaded methods to TrueSyncInput.GetXYZ which is possible to inform a specific owner id

@@ -14,7 +14,11 @@ namespace TrueSync {
             SerializedProperty serializedValueProperty = property.FindPropertyRelative("_serializedValue");
             string value = serializedValueProperty.stringValue;
 
-            FP fpValue = FP.FromRaw(long.Parse(value));
+            FP fpValue = FP.Zero;
+
+            if (value != "") {
+                fpValue = FP.FromRaw(long.Parse(value));
+            }
 
             fpValue = EditorGUI.FloatField(position, label, (float)fpValue);
 

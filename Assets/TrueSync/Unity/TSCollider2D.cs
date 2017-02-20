@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TrueSync {
     /**
@@ -24,10 +25,32 @@ namespace TrueSync {
             protected set { shape = value; }
         }
 
+        [FormerlySerializedAs("isTrigger")]
+        [SerializeField]
+        private bool _isTrigger;
+
         /**
          *  @brief If it is only a trigger and doesn't interfere on collisions. 
          **/
-        public bool isTrigger;
+        public bool isTrigger {
+
+            get {
+                if (_body != null) {
+                    return _body.IsSensor;
+                }
+
+                return _isTrigger;
+            }
+
+            set {
+                _isTrigger = value;
+
+                if (_body != null) {
+                    _body.IsSensor = value;
+                }
+            }
+
+        }
 
         /**
          *  @brief Simulated material. 
@@ -78,7 +101,13 @@ namespace TrueSync {
         /**
          *  @brief Creates the shape related to a concrete implementation of TSCollider.
          **/
-        public abstract Physics2D.Shape CreateShape();
+        public virtual Physics2D.Shape CreateShape() {
+            return null;
+        }
+
+        public virtual Physics2D.Shape[] CreateShapes() {
+            return new Physics2D.Shape[0];
+        }
 
         private TSRigidBody2D tsRigidBody;
 
@@ -119,17 +148,30 @@ namespace TrueSync {
             }
         }
 
+        private void CreateBodyFixture(Physics2D.Body body, Physics2D.Shape shape) {
+            Physics2D.Fixture fixture = body.CreateFixture(shape);
+
+            if (tsMaterial != null) {
+                fixture.Friction = tsMaterial.friction;
+                fixture.Restitution = tsMaterial.restitution;
+            }
+        }
+
         private void CreateBody(Physics2D.World world) {
             Physics2D.Body body = Physics2D.BodyFactory.CreateBody(world);
-            Physics2D.Fixture fixture = body.CreateFixture(Shape);
 
             if (tsMaterial == null) {
                 tsMaterial = GetComponent<TSMaterial>();
             }
 
-            if (tsMaterial != null) {
-                fixture.Friction = tsMaterial.friction;
-                fixture.Restitution = tsMaterial.restitution;
+            Physics2D.Shape shape = Shape;
+            if (shape != null) {
+                CreateBodyFixture(body, shape);
+            } else {
+                Physics2D.Shape[] shapes = CreateShapes();
+                for (int index = 0, length = shapes.Length; index < length; index++) {
+                    CreateBodyFixture(body, shapes[index]);
+                }
             }
 
             if (tsRigidBody == null) {

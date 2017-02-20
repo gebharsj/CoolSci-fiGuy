@@ -46,11 +46,6 @@ public class PaddleController : TrueSyncBehaviour {
     private int score = 0;
 
     /**
-    * @brief Controlled {@link TSRigidBody} of the paddle.
-    **/
-    private TSRigidBody2D tsRigidBody;
-
-    /**
     * @brief Keep a static reference to the paddles where the key is its position on screen (true for top side and false to bottom side).
     **/
     public static Dictionary<bool, PaddleController> paddlesBySide = new Dictionary<bool, PaddleController>();
@@ -59,23 +54,19 @@ public class PaddleController : TrueSyncBehaviour {
     * @brief Initial setup when game is started.
     **/
     public override void OnSyncedStart() {
-        StateTracker.AddTracking(this);
-
         paddleCountText = (Instantiate (paddleCountPrefab) as GameObject).GetComponent<Text>();
 		paddleCountText.transform.SetParent(GameObject.Find ("Canvas").transform, false);
-
-        tsRigidBody = GetComponent<TSRigidBody2D>();
 
         // If paddle's owner is the first player then place it on top side
         if (owner.Id == 1) {
             Material redMatter = Resources.Load("RedMatter", typeof(Material)) as Material;
             GetComponent<MeshRenderer>().material = redMatter;
 
-            tsRigidBody.position = new TSVector2(0, 8);
+            tsRigidBody2D.position = new TSVector2(0, 8);
             // Adds this PaddleController in the {@link #paddlesBySide} dictionary with key being true (top size)
             paddlesBySide[true] = this;
         } else {
-            tsRigidBody.position = new TSVector2(0, -8);
+            tsRigidBody2D.position = new TSVector2(0, -8);
             // Adds this PaddleController in the {@link #paddlesBySide} dictionary with key being false (bottom size)
             paddlesBySide[false] = this;
         }
@@ -111,7 +102,7 @@ public class PaddleController : TrueSyncBehaviour {
     public override void OnSyncedUpdate() {
 		int directionInput = TrueSyncInput.GetInt (INPUT_KEY_HORIZONTAL);
 
-        TSVector2 currentPosition = tsRigidBody.position;
+        TSVector2 currentPosition = tsRigidBody2D.position;
 
 		if (directionInput < 0) {
             currentPosition.x -= speedX;
@@ -120,7 +111,7 @@ public class PaddleController : TrueSyncBehaviour {
         }
 
         if (FP.Abs(currentPosition.x) <= (maxX + MARGIN)) {
-            tsRigidBody.position = currentPosition;
+            tsRigidBody2D.position = currentPosition;
         }
     }
 

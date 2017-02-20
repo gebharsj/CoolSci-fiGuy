@@ -7,11 +7,6 @@ using TrueSync;
 public class BallBehavior : TrueSyncBehaviour {
 
     /**
-    * @brief Controlled {@link TSRigidBody} of the ball.
-    **/
-    TSRigidBody2D tsRigidBody;
-
-    /**
     * @brief AudioSource for sound effects.
     **/
     AudioSource audioSource;
@@ -21,7 +16,6 @@ public class BallBehavior : TrueSyncBehaviour {
     **/
     void Start() {
         audioSource = GetComponent<AudioSource>();
-        tsRigidBody = GetComponent<TSRigidBody2D>();
     }
 
     /**
@@ -32,7 +26,7 @@ public class BallBehavior : TrueSyncBehaviour {
     }
 
     public override void OnSyncedUpdate() {
-        tsRigidBody.GetComponent<TSTransform2D>().rotation -= 5;
+        tsTransform2D.rotation -= 5;
     }
 
     /**
@@ -40,7 +34,7 @@ public class BallBehavior : TrueSyncBehaviour {
     **/
     public void OnSyncedCollisionEnter(TSCollision2D other) {
         if (other.gameObject.tag == "player") {
-            tsRigidBody.AddForce(new TSVector2(0, -500));
+            tsRigidBody2D.AddForce(new TSVector2(0, -500));
         }
         if (other.gameObject.tag != "goal")
         {
@@ -59,8 +53,8 @@ public class BallBehavior : TrueSyncBehaviour {
     * @brief Places the ball in its initial position and sets to zero its linear velocity.
     **/
     public void ResetProperties() {
-        tsRigidBody.position = new TSVector2(0, 5);
-        tsRigidBody.velocity = TSVector2.zero;
+        tsRigidBody2D.position = new TSVector2(0, 5);
+        tsRigidBody2D.velocity = TSVector2.zero;
     }
 
 }

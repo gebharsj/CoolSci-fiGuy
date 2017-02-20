@@ -81,10 +81,6 @@ MonoBehaviour:
     _serializedValue: 4294967296
   _useGravity: 1
   _isKinematic: 0
-  _linearDrag:
-    _serializedValue: 0
-  _angularDrag:
-    _serializedValue: 214748368
   interpolation: 0
   _constraints: 0
 --- !u!114 &11422092

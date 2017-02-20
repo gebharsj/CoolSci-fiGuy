@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TrueSync {
     /**
@@ -25,10 +26,29 @@ namespace TrueSync {
             protected set { shape = value; }
         }
 
+        [FormerlySerializedAs("isTrigger")]
+        [SerializeField]
+        private bool _isTrigger;
+
         /**
          *  @brief If it is only a trigger and doesn't interfere on collisions. 
          **/
-        public bool isTrigger;
+        public bool isTrigger {
+            get {
+                if (_body != null) {
+                    return _body.IsColliderOnly;
+                }
+
+                return _isTrigger;
+            }
+            set {
+                _isTrigger = value;
+
+                if (_body != null) {
+                    _body.IsColliderOnly = _isTrigger;
+                }
+            }
+        }
 
         /**
          *  @brief Simulated material. 

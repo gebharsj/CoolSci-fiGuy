@@ -283,6 +283,14 @@ namespace TrueSync
             return (TSRaycastHit2D[]) _CircleCast(origin, radius, direction, distance, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
+        public static TSRaycastHit2D Raycast(TSVector2 origin, TSVector2 direction, FP distance) {
+            return Physics2DWorldManager.instance.Raycast(origin, direction, distance);
+        }
+
+        public static TSRaycastHit2D[] RaycastAll(TSVector2 origin, TSVector2 direction, FP distance) {
+            return Physics2DWorldManager.instance.RaycastAll(origin, direction, distance);
+        }
+
     }
 
 }

@@ -37,11 +37,6 @@ public class PlayerBehavior : TrueSyncBehaviour {
     Animator animator;
 
     /**
-    * @brief Controlled {@link TSRigidBody} of the player.
-    **/
-    TSRigidBody2D tsRigidBody;
-
-    /**
     * @brief Instance of an SpriteRenderer for fast access.
     **/
     SpriteRenderer spriteRenderer;
@@ -50,7 +45,6 @@ public class PlayerBehavior : TrueSyncBehaviour {
     * @brief Initial setup when game is started.
     **/
     public override void OnSyncedStart () {
-		tsRigidBody = GetComponent<TSRigidBody2D>();
 		animator = GetComponent<Animator> ();
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 
@@ -59,15 +53,15 @@ public class PlayerBehavior : TrueSyncBehaviour {
 			animator.runtimeAnimatorController = animatorControllers [0];
 			spriteRenderer.sprite = sprites [0];
 
-			tsRigidBody.position = new TSVector2(1, 0);
+			tsRigidBody2D.position = new TSVector2(1, 0);
 		} else {
 			animator.runtimeAnimatorController = animatorControllers [1];
 			spriteRenderer.sprite = sprites [1];
 			spriteRenderer.flipX = true;
 
             TSVector2 offset = new TSVector2(-0.63f, -0.87f);
-            tsRigidBody.GetComponent<TSCollider2D>().Center = offset;
-			tsRigidBody.position = new TSVector2(-1 - offset.x, 0);
+            tsCollider2D.Center = offset;
+			tsRigidBody2D.position = new TSVector2(-1 - offset.x, 0);
 		}
 
         // stops Animation
@@ -82,7 +76,7 @@ public class PlayerBehavior : TrueSyncBehaviour {
     void UpdateAnimations() {
         animator.Update(Time.deltaTime);
 
-        if (tsRigidBody.velocity.LengthSquared() > FP.Half) {
+        if (tsRigidBody2D.velocity.LengthSquared() > FP.Half) {
             animator.SetBool("running", true);
         } else {
             animator.SetBool("running", false);
@@ -107,7 +101,7 @@ public class PlayerBehavior : TrueSyncBehaviour {
 		UpdateAnimations();
 
         // Set a velocity based on player's speed and inputs
-		TSVector2 velocity = tsRigidBody.velocity;
+		TSVector2 velocity = tsRigidBody2D.velocity;
 		velocity.x = TrueSyncInput.GetInt(INPUT_KEY_MOVE) * speed / (FP) 100;
 
 		if (TrueSyncInput.GetByte(INPUT_KEY_JUMP) > 0) {
@@ -115,7 +109,7 @@ public class PlayerBehavior : TrueSyncBehaviour {
         }
 
         // Assigns this velocity as new player's linear velocity
-		tsRigidBody.velocity = velocity;
+		tsRigidBody2D.velocity = velocity;
 	}
 		
 }

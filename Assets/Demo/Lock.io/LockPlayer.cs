@@ -16,10 +16,10 @@ public class LockPlayer : TrueSyncBehaviour {
 	public TSVector movement;
 	public FP speed = 0.15;
 
-	private TSRigidBody rb;
 	private SphereShape ss;
 	private Text nickLabel;
 
+    [AddTracking]
 	public FP currentScale = FP.One;
 	public FP growSlow = 1.125f;
 	public FP growFast = 1.25f;
@@ -33,23 +33,20 @@ public class LockPlayer : TrueSyncBehaviour {
 		onFocus = focusStatus;
 	}
 
-	public override void OnSyncedStart() {
+    public override void OnSyncedStartLocalPlayer() {
+        Camera.main.GetComponent<TopDownCamera>().target = transform;
+    }
+
+    public override void OnSyncedStart() {
 		nickLabel = (Instantiate (nickPrefab) as GameObject).GetComponent<Text>();
 		nickLabel.transform.SetParent (GameObject.Find ("Canvas").transform, false);
         nickLabel.text = owner.Name;
 	
-		rb = GetComponent<TSRigidBody> ();
 		ss = (SphereShape) GetComponent<TSSphereCollider> ().Shape;
 
-		rb.position += new TSVector (owner.Id * 2, 0, 0);
+		tsRigidBody.position += new TSVector (owner.Id * 2, 0, 0);
 		originalRadius = ss.Radius;
 		originalGraphicsScale = graphics.localScale;
-
-		// needed for rollbacks
-		StateTracker.AddTracking(this, "currentScale");
-
-		if (owner.Id == localOwner.Id)
-			Camera.main.GetComponent<TopDownCamera> ().target = transform;
 	}
 
 	public override void OnSyncedInput () {
@@ -84,12 +81,12 @@ public class LockPlayer : TrueSyncBehaviour {
 	}
 
 	private void Steer() {
-		movement = destination - rb.position;
+		movement = destination - tsRigidBody.position;
 		if (movement.sqrMagnitude < FP.One)
 			return;
 		movement.Normalize ();
 		movement *= TrueSyncManager.DeltaTime * speed / currentScale;
-		rb.position += movement;
+        tsRigidBody.position += movement;
 	}
 
 	public void OnSyncedCollisionEnter(TSCollision other) {
@@ -104,7 +101,7 @@ public class LockPlayer : TrueSyncBehaviour {
 			if (ss.Radius > enemy.ss.Radius) {
 				// grow fast and eat other
 				currentScale *= growFast;
-				enemy.rb.position = new TSVector (TSRandom.Range(-35,35),0,TSRandom.Range(-20,20));
+				enemy.tsRigidBody.position = new TSVector (TSRandom.Range(-35,35),0,TSRandom.Range(-20,20));
 				enemy.currentScale = FP.One;
 				//TrueSyncManager.SyncedDestroy(other);
 			}

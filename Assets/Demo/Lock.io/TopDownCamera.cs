@@ -20,4 +20,5 @@ public class TopDownCamera : MonoBehaviour {
 			div *= 2;
 		}
 	}
+
 }

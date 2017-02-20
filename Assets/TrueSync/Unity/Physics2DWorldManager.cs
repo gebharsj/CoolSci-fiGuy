@@ -229,12 +229,34 @@ namespace TrueSync {
             return go.layer;
         }
 
-        public bool Raycast(TSVector rayOrigin, TSVector rayDirection, RaycastCallback raycast, out IBody body, out TSVector normal, out FP fraction) {
-            throw new NotImplementedException();
+        public TSRaycastHit2D Raycast(TSVector2 origin, TSVector2 direction, FP distance) {
+            TSRaycastHit2D result = null;
+
+            Func<TrueSync.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (TrueSync.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
+                result = new TSRaycastHit2D(gameObjectMap[fixture.Body].GetComponent<TSCollider2D>());
+                return 0;
+            };
+
+            world.RayCast(callback, origin, origin + direction * distance);
+
+            return result;
         }
 
-        public TSRaycastHit Raycast(TSRay ray, FP maxDistance, RaycastCallback callback = null) {
-            throw new NotImplementedException();
+        public TSRaycastHit2D[] RaycastAll(TSVector2 origin, TSVector2 direction, FP distance) {
+            List<TSRaycastHit2D> result = new List<TSRaycastHit2D>();
+
+            Func<TrueSync.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (TrueSync.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
+                result.Add(new TSRaycastHit2D(gameObjectMap[fixture.Body].GetComponent<TSCollider2D>()));
+                return -1;
+            };
+
+            world.RayCast(callback, origin, origin + direction * distance);
+
+            if (result.Count == 0) {
+                return null;
+            }
+
+            return result.ToArray();
         }
 
         public bool IsCollisionEnabled(IBody rigidBody1, IBody rigidBody2) {

@@ -57,19 +57,6 @@ namespace TrueSync {
          **/
         public static TSBody2DComparer body2DComparer = new TSBody2DComparer();
 
-        /**
-         *  @brief A few MethodInfo dictionary to allow reusable method calls.
-         **/
-        public static Dictionary<string, MethodInfo> methodInfoByName = new Dictionary<string, MethodInfo>();
-
-        static UnityUtils() {
-            Type type = typeof(TrueSyncManagedBehaviour);            
-            methodInfoByName["TrueSyncManagedBehaviour.OnSyncedStart"] = type.GetMethod("OnSyncedStart");
-            methodInfoByName["TrueSyncManagedBehaviour.OnGamePaused"] = type.GetMethod("OnGamePaused");
-            methodInfoByName["TrueSyncManagedBehaviour.OnGameUnPaused"] = type.GetMethod("OnGameUnPaused");
-            methodInfoByName["TrueSyncManagedBehaviour.OnGameEnded"] = type.GetMethod("OnGameEnded");
-            methodInfoByName["TrueSyncManagedBehaviour.OnPlayerDisconnection"] = type.GetMethod("OnPlayerDisconnection");
-        }
-
     }
+
 }

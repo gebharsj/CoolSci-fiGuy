@@ -452,6 +452,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
     public NetworkingPeer(string playername, ConnectionProtocol connectionProtocol) : base(connectionProtocol)
     {
+        this.ClientSdkId = 28;
         this.Listener = this;
         this.LimitOfUnreliableCommands = 40;
 

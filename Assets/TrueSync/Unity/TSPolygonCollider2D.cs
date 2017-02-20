@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace TrueSync {
+
     /**
      *  @brief Collider with a polygon 2D shape. 
      **/
@@ -13,45 +14,45 @@ namespace TrueSync {
 
         public TSVector2[] points {
             get {
-                if (_body != null) {
-                    Physics2D.PolygonShape polygonShape = (Physics2D.PolygonShape)_body.FixtureList[0].Shape;
-                    return polygonShape.Vertices.ToArray();
-                }
-
                 return _points;
             }
 
             set {
-                _points = value;
-
-                if (_body != null) {
-                    Physics2D.PolygonShape polygonShape = (Physics2D.PolygonShape)_body.FixtureList[0].Shape;
-                    polygonShape.Vertices = new Physics2D.Vertices(value);
+                if (_body == null) {
+                    _points = value;
                 }
             }
         }
 
         /**
-         *  @brief Create the internal shape used to represent a TSBoxCollider.
+         *  @brief Create the internal shape used to represent a PolygonCollider.
          **/
-        public override TrueSync.Physics2D.Shape CreateShape() {
+        public override TrueSync.Physics2D.Shape[] CreateShapes() {
             if (_points == null || _points.Length == 0) {
                 return null;
             }
 
-            TSVector2 lossy2D = new TSVector2(lossyScale.x, lossyScale.y);
 
+            TSVector2 lossy2D = new TSVector2(lossyScale.x, lossyScale.y);
             TrueSync.Physics2D.Vertices v = new Physics2D.Vertices();
             for (int index = 0, length = _points.Length; index < length; index++) {
                 v.Add(TSVector2.Scale(_points[index], lossy2D));
             }
 
-            return new TrueSync.Physics2D.PolygonShape(v, 1);
+            List<TrueSync.Physics2D.Vertices> convexShapeVs = TrueSync.Physics2D.BayazitDecomposer.ConvexPartition(v);
+            TrueSync.Physics2D.Shape[] result = new Physics2D.Shape[convexShapeVs.Count];
+            for (int index = 0, length = result.Length; index < length; index++) {
+                result[index] = new TrueSync.Physics2D.PolygonShape(convexShapeVs[index], 1);
+            }
+
+            return result;
         }
 
         protected override void DrawGizmos() {
-            TSVector2[] allPoints = _points;
+            DrawPolygon(_points);
+        }
 
+        private void DrawPolygon(TSVector2[] allPoints) {
             if (allPoints == null || allPoints.Length == 0) {
                 return;
             }

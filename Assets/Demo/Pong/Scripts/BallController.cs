@@ -27,29 +27,15 @@ public class BallController : TrueSyncBehaviour {
     public float speedY;
 
     /**
-    * @brief Controlled {@link TSRigidBody} of the ball.
-    **/
-    private TSRigidBody2D tsRigidBody;
-
-    /**
-    * @brief Initial setup when game is started.
-    **/
-    public override void OnSyncedStart() {
-        StateTracker.AddTracking(this);
-
-        tsRigidBody = GetComponent<TSRigidBody2D>();
-    }
-
-    /**
     * @brief Updates ball's position.
     **/
     public override void OnSyncedUpdate() {
-        TSVector2 currentPosition = tsRigidBody.position;
+        TSVector2 currentPosition = tsRigidBody2D.position;
 
         currentPosition.x += speedX;
         currentPosition.y += speedY;
 
-        tsRigidBody.position = currentPosition;
+        tsRigidBody2D.position = currentPosition;
     }
 
     /**
@@ -73,7 +59,7 @@ public class BallController : TrueSyncBehaviour {
         // if hits a paddle then should also inverse Y axis movement
         } else {
             // Check to avoid movement change when the ball hits the paddle by its back
-            if (speedY * tsRigidBody.position.y > 0) {
+            if (speedY * tsRigidBody2D.position.y > 0) {
                 speedY *= -1;
             }
         }

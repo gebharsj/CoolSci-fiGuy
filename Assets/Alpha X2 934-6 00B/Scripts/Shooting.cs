@@ -34,11 +34,11 @@ public class Shooting : TrueSyncBehaviour
             if(TrueSyncManager.LocalPlayer == owner)
             {
                 player = _player;
+                anim = player.GetComponent<Animator>();
+                movement = player.GetComponent<Movement>();
+                customCamera = Camera.main.gameObject.GetComponent<CustomCamera>();
             }
         }
-        anim = player.GetComponent<Animator>();
-        movement = player.GetComponent<Movement>();
-        customCamera = Camera.main.gameObject.GetComponent<CustomCamera>();
         muzzleFlash.SetActive(false);
         ammo = magazineSize;
     }

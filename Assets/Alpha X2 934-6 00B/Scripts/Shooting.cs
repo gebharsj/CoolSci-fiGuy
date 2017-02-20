@@ -7,13 +7,13 @@ public class Shooting : TrueSyncBehaviour
 {
     public GameObject muzzleFlash;
     public GameObject bulletHole;
+    public GameObject gun;
 
     public float shootingRange = 50f;
     public float fireFreq = .05f;
     public float magazineSize = 60f;
     public float reloadTime = 2f;
-
-    GameObject player;
+    
     float ammo;
     float lastShot;
 
@@ -29,16 +29,9 @@ public class Shooting : TrueSyncBehaviour
 
     public override void  OnSyncedStart()
     {
-        foreach (GameObject _player in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            if(TrueSyncManager.LocalPlayer == owner)
-            {
-                player = _player;
-                anim = player.GetComponent<Animator>();
-                movement = player.GetComponent<Movement>();
-                customCamera = Camera.main.gameObject.GetComponent<CustomCamera>();
-            }
-        }
+        customCamera = transform.FindChild("Main Camera").GetComponent<CustomCamera>();
+        movement = GetComponent<Movement>();
+        anim = GetComponent<Animator>();
         muzzleFlash.SetActive(false);
         ammo = magazineSize;
     }
@@ -91,7 +84,7 @@ public class Shooting : TrueSyncBehaviour
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(.01f);
         muzzleFlash.SetActive(false);
-        if (Physics.Raycast(transform.position, transform.right, out hit, shootingRange))
+        if (Physics.Raycast(gun.transform.position, transform.right, out hit, shootingRange))
         {
             print("Happens");
             if(hit.transform.tag == "Player")

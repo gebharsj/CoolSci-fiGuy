@@ -31,7 +31,7 @@ public class Shooting : TrueSyncBehaviour
     {
         foreach (GameObject _player in GameObject.FindGameObjectsWithTag("Player"))
         {
-            if(_player.GetComponent<PhotonView>().isMine)
+            if(TrueSyncManager.LocalPlayer == owner)
             {
                 player = _player;
             }

@@ -34,6 +34,8 @@ public class Movement : TrueSyncBehaviour
 	public override void  OnSyncedStart ()
     {
         customCamera = transform.FindChild("Main Camera").gameObject.GetComponent<CustomCamera>();
+        if (TrueSyncManager.LocalPlayer == owner)
+            transform.FindChild("Main Camera").gameObject.SetActive(true);
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         originalGroundCheckDistance = groundCheckDistance;

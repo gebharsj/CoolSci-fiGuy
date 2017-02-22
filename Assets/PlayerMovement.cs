@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     float currentSpeed;
     bool sprinting;
+    bool exhausted;
 
     Transform myCamera;
 
@@ -60,21 +61,29 @@ public class PlayerMovement : MonoBehaviour
 
         if(canSprint && controls.Sprint.IsPressed)
         {
-            if(!sprinting)
+            if(!sprinting && !exhausted)
             {
                 sprinting = true;
                 currentSpeed = speed * 2;
             }
+
+            if(!exhausted)
             staminaBar.fillAmount -= (Time.deltaTime * .5f);
 
             if(staminaBar.fillAmount <= 0)
             {
+                exhausted = true;
                 currentSpeed = speed;
-               // staminaBar.fillAmount += Time.deltaTime;
             }
         }
         else
         {
+            if(exhausted)
+            {
+                if(staminaBar.fillAmount >= 1)
+                    exhausted = false;
+            }
+
             if(canSprint)
             {
                 sprinting = false;

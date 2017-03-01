@@ -72,12 +72,14 @@ public class PlayerMovement : TrueSyncBehaviour
         FP vertical = controls.Move.Y;
         FP vertical2 = controls.Look.Y;
         bool jumping = controls.Jump;
+        bool sprintInput = controls.Sprint.IsPressed;
 
         TrueSyncInput.SetFP(0, horizontal);
         TrueSyncInput.SetFP(1, vertical);
         TrueSyncInput.SetFP(2, horizontal2);
         TrueSyncInput.SetFP(3, vertical2);
         TrueSyncInput.SetBool(4, jumping);
+        TrueSyncInput.SetBool(5, sprintInput);
     }
 
     public override void OnSyncedUpdate()
@@ -87,6 +89,7 @@ public class PlayerMovement : TrueSyncBehaviour
         FP vertical = TrueSyncInput.GetFP(1);
         FP vertical2 = TrueSyncInput.GetFP(3);
         bool jumping = TrueSyncInput.GetBool(4);
+        bool sprintInput = TrueSyncInput.GetBool(5);
 
         CheckGroundedStatus();
 
@@ -96,7 +99,7 @@ public class PlayerMovement : TrueSyncBehaviour
             CheckGroundedStatus();
         }
 
-        if (canSprint && controls.Sprint.IsPressed)
+        if (canSprint && sprintInput)
         {
             if (!sprinting && !exhausted)
             {

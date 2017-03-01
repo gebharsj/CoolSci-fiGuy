@@ -56,6 +56,8 @@ public class PlayerMovement : TrueSyncBehaviour
     {
         Cursor.visible = false;
         myCamera = transform.FindChild("Camera");
+        if (TrueSyncManager.LocalPlayer == owner)
+            myCamera.gameObject.SetActive(true);
         cameraTargetRot = myCamera.localRotation;
         myRotation = transform.localRotation;
         currentSpeed = speed;

@@ -54,6 +54,7 @@ public class PlayerMovement : TrueSyncBehaviour
 
     public override void OnSyncedStart()
     {
+        transform.position = new Vector3(owner.Id * 2, 0, owner.Id * 2);
         Cursor.visible = false;
         myCamera = transform.FindChild("Camera");
         if (TrueSyncManager.LocalPlayer == owner)

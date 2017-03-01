@@ -4,13 +4,14 @@ using InControl;
 using UnityEngine.UI;
 using TrueSync;
 
+[RequireComponent (typeof(Rigidbody))]
 public class PlayerMovement : TrueSyncBehaviour
 {
     public float speed;
     public float rotationSpeed;
     public bool canSprint;
-    public Image staminaBar;
 
+    public Image staminaBar;
     public float jumpForce;
 
     public float minVerticalClamp = -65;
@@ -18,28 +19,28 @@ public class PlayerMovement : TrueSyncBehaviour
 
     public bool clampVerticalRotation = true;
 
-    float horizontal;
-    float horizontal2;
-    float vertical;
-    float vertical2;
+    //float horizontal;
+    //float horizontal2;
+    //float vertical;
+    //float vertical2;
+    //bool jumping;
 
     float currentSpeed;
     bool sprinting;
     bool exhausted;
 
-    TSTransform myCamera;
+    Transform myCamera;
+
+    Rigidbody rb;
+    bool isGrounded;
+    float groundCheckDistance = 0.2f;
+    float originalGroundCheckDistance;
 
     Controls controls;
     string saveData;
 
-    TSQuaternion cameraTargetRot;
-    TSQuaternion myRotation;
-
-    TSRigidBody rb;
-    bool isGrounded;
-
-    float groundCheckDistance = 0.2f;
-    float originalGroundCheckDistance;
+    Quaternion cameraTargetRot;
+    Quaternion myRotation;
 
     void OnEnable()
     {
@@ -51,15 +52,14 @@ public class PlayerMovement : TrueSyncBehaviour
         controls.Destroy();
     }
 
-    public override void  OnSyncedStart()
+    public override void OnSyncedStart()
     {
         Cursor.visible = false;
-        myCamera = transform.FindChild("Camera").GetComponent<TSTransform>();
-        cameraTargetRot = myCamera.rotation;
-        myRotation = tsTransform.rotation;
+        myCamera = transform.FindChild("Camera");
+        cameraTargetRot = myCamera.localRotation;
+        myRotation = transform.localRotation;
         currentSpeed = speed;
-        rb = GetComponent<TSRigidBody>();
-        originalGroundCheckDistance = groundCheckDistance;
+        rb = GetComponent<Rigidbody>();
     }
 
     public override void OnSyncedInput()
@@ -76,6 +76,7 @@ public class PlayerMovement : TrueSyncBehaviour
         TrueSyncInput.SetFP(3, vertical2);
         TrueSyncInput.SetBool(4, jumping);
     }
+
     public override void OnSyncedUpdate()
     {
         FP horizontal = TrueSyncInput.GetFP(0);
@@ -88,36 +89,37 @@ public class PlayerMovement : TrueSyncBehaviour
 
         if (jumping && isGrounded)
         {
-            rb.velocity = new TSVector(rb.velocity.x, jumpForce, rb.velocity.z);
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
             CheckGroundedStatus();
         }
 
         if (canSprint && controls.Sprint.IsPressed)
         {
-            if(!sprinting && !exhausted)
+            if (!sprinting && !exhausted)
             {
                 sprinting = true;
                 currentSpeed = speed * 2;
             }
 
             if(!exhausted)
-            staminaBar.fillAmount -= (Time.deltaTime * .5f);
+                staminaBar.fillAmount -= (Time.deltaTime * .5f);
 
-            if(staminaBar.fillAmount <= 0)
+            if (staminaBar.fillAmount <= 0)
             {
                 exhausted = true;
                 currentSpeed = speed;
+                // staminaBar.fillAmount += Time.deltaTime;
             }
         }
         else
         {
-            if(exhausted)
+            if (exhausted)
             {
-                if(staminaBar.fillAmount >= 1)
+                if (staminaBar.fillAmount >= 1)
                     exhausted = false;
             }
 
-            if(canSprint)
+            if (canSprint)
             {
                 sprinting = false;
                 currentSpeed = speed;
@@ -125,17 +127,17 @@ public class PlayerMovement : TrueSyncBehaviour
                 staminaBar.fillAmount += Time.deltaTime;
             }
         }
-        
-        cameraTargetRot *= TSQuaternion.Euler(-vertical2 * rotationSpeed * Time.deltaTime, 0f, 0f);
-        myRotation *= TSQuaternion.Euler(0f, horizontal2 * rotationSpeed * Time.deltaTime, 0f);
+
+        cameraTargetRot *= Quaternion.Euler(-(float)vertical2 * rotationSpeed * Time.deltaTime, 0f, 0f);
+        myRotation *= Quaternion.Euler(0f, (float)horizontal2 * rotationSpeed * Time.deltaTime, 0f);
 
         if (clampVerticalRotation)
-           cameraTargetRot = ClampRotationAroundXAxis(cameraTargetRot.ToQuaternion());
+            cameraTargetRot = ClampRotationAroundXAxis(cameraTargetRot);
 
-        myCamera.rotation = TSQuaternion.Slerp(myCamera.rotation, cameraTargetRot, 1);
+        myCamera.localRotation = Quaternion.Slerp(myCamera.localRotation, cameraTargetRot, 1);
 
-        tsTransform.Translate(new TSVector(horizontal * TrueSyncManager.DeltaTime * currentSpeed, 0f, vertical * TrueSyncManager.DeltaTime * currentSpeed));
-        tsTransform.rotation = TSQuaternion.Slerp(tsTransform.rotation, myRotation, 1);
+        transform.Translate(new Vector3((float)horizontal * Time.deltaTime * currentSpeed, 0f, (float)vertical * Time.deltaTime * currentSpeed));
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, myRotation, 1);
         // transform.Rotate(new Vector3(0, horizontal2 * rotationSpeed * Time.deltaTime, 0));
     }
 
@@ -155,18 +157,19 @@ public class PlayerMovement : TrueSyncBehaviour
         }
     }
 
-    TSQuaternion ClampRotationAroundXAxis(Quaternion q)
-    { 
-        q.x /= q.w; 
-        q.y /= q.w; 
-        q.z /= q.w; 
-        q.w = 1.0f; 
- 
-        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x); 
-        angleX = Mathf.Clamp(angleX, minVerticalClamp, maxVerticalClamp); 
-        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad* angleX); 
-        return q.ToTSQuaternion();
+    Quaternion ClampRotationAroundXAxis(Quaternion q)
+    {
+        q.x /= q.w;
+        q.y /= q.w;
+        q.z /= q.w;
+        q.w = 1.0f;
+
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+        angleX = Mathf.Clamp(angleX, minVerticalClamp, maxVerticalClamp);
+        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
+        return q;
     }
+
     void CheckGroundedStatus()
     {
         RaycastHit hitInfo;
@@ -177,13 +180,11 @@ public class PlayerMovement : TrueSyncBehaviour
             if ((hitInfo.collider.tag == "Ground" || hitInfo.collider.tag == "Environment") && hitInfo.distance <= groundCheckDistance)
             {
                 isGrounded = true;
-                print("IsGround = " + isGrounded);
             }
         }
         else
         {
             isGrounded = false;
-            print("IsGround = " + isGrounded);
         }
     }
 }
